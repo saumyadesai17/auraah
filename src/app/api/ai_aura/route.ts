@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Use the updated prompt without urlOfImage
 const prompt = `You're an intelligent AI designed to identify whether the input "${name}" is a person, place, or thing.
 
-Step 1: Classify what "${name}" is — a person, place, or thing — and describe it briefly in 1–2 sentences.
+Step 1: Classify what "${name}" is — a real person, fictional character, place, or thing — and describe it briefly in 1–2 sentences.
 
 Step 2: Write a short paragraph explaining what makes "${name}" notable — its impact, fame, or importance.
 
@@ -51,7 +51,8 @@ Step 5: Explain the score briefly in "auraReason" — 1–2 sentences explaining
 Respond ONLY in the following strict JSON format:
 {
   "name": "${name}",
-  "description": "<Your description identifying if it's a person/place/thing.>",
+  "type": "<person | fictional character | place | thing | brand>",
+  "description": "<Your description identifying what it is.>",
   "claimToFame": "<Short paragraph explaining its notability.>",
   "recommendedHashtags": "#Entity1, #Entity2, #Entity3, #Entity4, #Entity5, #Entity6, #Entity7, #Entity8, #Entity9, #Entity10",
   "auraMeter": <number from 1 to 100>,
@@ -59,9 +60,11 @@ Respond ONLY in the following strict JSON format:
 }
 
 Formatting Rules:
+- Use one of the four values for "type": person, fictional character, place, thing.
 - Only comma-separated entity names as hashtags in "recommendedHashtags" — no extra text.
 - Do not mix categories (person → people, place → places, etc.).
 - Output must be plain text JSON, no markdown or HTML.`
+
 ;
  // Insert the updated prompt here
 
