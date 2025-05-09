@@ -12,17 +12,17 @@ export default function NavigationBreadcrumb({ currentTag, recentTags = [] }: Na
     <nav className="mt-2 flex items-center space-x-1 overflow-x-auto scrollbar-hide py-2">
       <Link 
         href="/discover" 
-        className="text-sm font-medium text-tropical-indigo hover:text-amethyst transition-colors flex-shrink-0"
+        className="text-sm font-medium text-secondary hover:text-accent transition-colors flex-shrink-0"
       >
         Discover
       </Link>
 
-      {recentTags.slice(0, 2).map((tag, index) => (
+      {recentTags.slice(0, 2).map((tag) => (
         <div key={tag.id} className="flex items-center flex-shrink-0">
-          <ChevronRight size={14} className="text-tropical-indigo/40 mx-1" />
+          <ChevronRight size={14} className="text-secondary/40 mx-1" />
           <Link 
             href={`/discover/${encodeURIComponent(tag.id)}`}
-            className="text-sm font-medium text-tropical-indigo/60 hover:text-amethyst transition-colors"
+            className="text-sm font-medium text-secondary/60 hover:text-accent transition-colors"
           >
             {tag.name}
           </Link>
@@ -31,8 +31,8 @@ export default function NavigationBreadcrumb({ currentTag, recentTags = [] }: Na
 
       {currentTag && (
         <div className="flex items-center flex-shrink-0">
-          <ChevronRight size={14} className="text-tropical-indigo/40 mx-1" />
-          <span className="text-sm font-semibold text-amethyst">
+          <ChevronRight size={14} className="text-secondary/40 mx-1" />
+          <span className="text-sm font-semibold text-accent">
             {currentTag.name}
           </span>
         </div>

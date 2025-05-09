@@ -1,5 +1,7 @@
 import { Tag } from '@/lib/data';
-import TagButton from '@/components/discover/TagButton';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { User } from 'lucide-react';
 
 interface SimilarTagsRowProps {
   tags: Tag[];
@@ -7,32 +9,38 @@ interface SimilarTagsRowProps {
   highlightedType?: string;
 }
 
-export default function SimilarTagsRow({ tags, currentTagId, highlightedType }: SimilarTagsRowProps) {
+export default function SimilarTagsRow({ tags }: SimilarTagsRowProps) {
   if (!tags || tags.length === 0) {
-    return <p className="text-center text-custom-text-secondary mt-4">No similar auras found.</p>;
+    return (
+      <div className="p-6 text-center bg-card/30 border border-border/50 rounded-lg">
+        <p className="text-muted-foreground">No similar auras found.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="relative">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-base sm:text-lg font-semibold text-tropical-indigo">Similar Auras</h3>
-        
-        {/* Tag count indicator */}
-        <span className="text-xs bg-tropical-indigo/10 text-tropical-indigo px-2 py-1 rounded-full">
-          {tags.length} {tags.length === 1 ? 'tag' : 'tags'}
-        </span>
-      </div>
-
-      {/* Using flex-wrap for a responsive layout on all screen sizes */}
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <div key={tag.id} className="flex-shrink-0">
-            <TagButton 
-              tag={tag} 
-              isActive={tag.id === currentTagId}
-              highlight={tag.type === highlightedType} 
-            />
-          </div>
+    <div className="relative pt-8">
+      <h3 className="text-xl font-semibold text-center text-foreground mb-6">
+        Continue Exploring Auras
+      </h3>
+      
+      <div className="flex flex-wrap justify-center gap-3 pb-4">
+        {tags.map((tag, index) => (
+          <motion.div 
+            key={tag.id} 
+            className="flex-shrink-0"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05, duration: 0.3 }}
+          >
+            <Link href={`/discover/${encodeURIComponent(tag.id)}`}
+              className="inline-flex items-center px-4 py-2 rounded-full 
+                      bg-primary/10 hover:bg-primary/20 text-primary 
+                      transition-colors">
+              <User size={16} className="mr-2 text-primary/70" />
+              {tag.name}
+            </Link>
+          </motion.div>
         ))}
       </div>
     </div>

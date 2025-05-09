@@ -4,26 +4,32 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* Core colors */
-  --color-amethyst: #9067c6;
-  --color-tropical-indigo: #8d86c9;
+  /* Core colors extracted from auraah logo */
+  --color-mint-green: #8fe5a2;
+  --color-pink-gradient: #ff7eb3;
+  --color-purple-gradient: #a17cff;
+  --color-blue-gradient: #5bc4e3;
+  --color-orange-gradient: #ffa270;
   --color-eggshell: #f0ebd8;
-  --color-ash-gray: #aac0af;
   --color-raisin-black: #1a1b25;
 
   /* Color variants */
-  --color-custom-purple-light: #a37fd7;
-  --color-custom-purple-DEFAULT: #9067c6;
-  --color-custom-purple-dark: #7a56a8;
+  --color-custom-mint-light: #a5edb4;
+  --color-custom-mint-DEFAULT: #8fe5a2;
+  --color-custom-mint-dark: #6bc87e;
 
-  --color-custom-indigo-light: #a099d3;
-  --color-custom-indigo-DEFAULT: #8d86c9;
-  --color-custom-indigo-dark: #756fb0;
+  --color-custom-purple-light: #b394ff;
+  --color-custom-purple-DEFAULT: #a17cff;
+  --color-custom-purple-dark: #8562e0;
+
+  --color-custom-pink-light: #ff9cc5;
+  --color-custom-pink-DEFAULT: #ff7eb3;
+  --color-custom-pink-dark: #f760a1;
 
   /* Functional colors */
   --color-custom-bg: var(--color-raisin-black);
   --color-custom-text: var(--color-eggshell);
-  --color-custom-text-secondary: var(--color-ash-gray);
+  --color-custom-text-secondary: #c1c1c8;
   --color-custom-border: #3c3e52;
 
   /* Simple essential animations */
@@ -62,7 +68,7 @@ body {
   background-color: var(--color-custom-border);
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--color-amethyst);
+  background-color: var(--color-custom-purple-DEFAULT);
   border-radius: 3px;
 }
 
@@ -74,7 +80,7 @@ body {
 .h1-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--color-amethyst);
+  color: var(--color-custom-mint-DEFAULT);
   margin-bottom: 1.5rem;
   text-align: center;
   animation: var(--animate-fade-in);
@@ -137,65 +143,65 @@ body {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --primary: #8fe5a2; /* Mint green from logo */
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: #a17cff; /* Purple from logo */
+  --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: #ff7eb3; /* Pink from logo */
+  --accent-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: #5bc4e3; /* Blue from logo */
+  --chart-1: #ff7eb3; /* Pink */
+  --chart-2: #a17cff; /* Purple */
+  --chart-3: #5bc4e3; /* Blue */
+  --chart-4: #8fe5a2; /* Mint */
+  --chart-5: #ffa270; /* Orange */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-primary: #8fe5a2; /* Mint green from logo */
+  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-accent: #a17cff; /* Purple from logo */
+  --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: #5bc4e3; /* Blue from logo */
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #1a1b25; /* Raisin black */
+  --foreground: #f0ebd8; /* Eggshell */
+  --card: #2a2b3d; /* Slightly lighter than background */
+  --card-foreground: #f0ebd8; /* Eggshell */
+  --popover: #2a2b3d; /* Matches card */
+  --popover-foreground: #f0ebd8; /* Eggshell */
+  --primary: #8fe5a2; /* Mint green from logo */
+  --primary-foreground: #1a1b25; /* Raisin black */
+  --secondary: #a17cff; /* Purple from logo */
+  --secondary-foreground: #f0ebd8; /* Eggshell */
+  --muted: rgba(161, 124, 255, 0.1); /* Purple with opacity */
+  --muted-foreground: #c1c1c8; /* Light gray */
+  --accent: #ff7eb3; /* Pink from logo */
+  --accent-foreground: #f0ebd8; /* Eggshell */
+  --destructive: #ff5757; /* Red */
+  --border: rgba(240, 235, 216, 0.1); /* Eggshell with opacity */
+  --input: rgba(240, 235, 216, 0.15); /* Eggshell with opacity */
+  --ring: #5bc4e3; /* Blue from logo */
+  --chart-1: #ff7eb3; /* Pink */
+  --chart-2: #a17cff; /* Purple */
+  --chart-3: #5bc4e3; /* Blue */
+  --chart-4: #8fe5a2; /* Mint */
+  --chart-5: #ffa270; /* Orange */
+  --sidebar: #2a2b3d; /* Matches card */
+  --sidebar-foreground: #f0ebd8; /* Eggshell */
+  --sidebar-primary: #8fe5a2; /* Mint green from logo */
+  --sidebar-primary-foreground: #1a1b25; /* Raisin black */
+  --sidebar-accent: #a17cff; /* Purple from logo */
+  --sidebar-accent-foreground: #f0ebd8; /* Eggshell */
+  --sidebar-border: rgba(240, 235, 216, 0.1); /* Eggshell with opacity */
+  --sidebar-ring: #5bc4e3; /* Blue from logo */
 }
 
 @layer base {

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, PanInfo, useAnimation, useMotionValue, useTransform } from 'framer-motion';
-import { Aura, mockAuras } from '@/lib/data';
+import { mockAuras } from '@/lib/data';
 import AuraCard from '@/components/explore/AuraCard';
 import { Heart, X, RefreshCw } from 'lucide-react';
 
@@ -21,23 +21,22 @@ export default function SwipeableCardStack() {
   const [cards, setCards] = useState(() => shuffleArray(mockAuras));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exiting, setExiting] = useState(false);
-  const [direction, setDirection] = useState<'right' | 'left' | null>(null);
-  
+
   // Track when we need to reset after all cards are seen
   const [needsReset, setNeedsReset] = useState(false);
-  
+
   // Track swipe direction for animation
   const controls = useAnimation();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  
+
   // Rotate card slightly as it moves
   const rotate = useTransform(x, [-300, 0, 300], [-30, 0, 30]);
-  
+
   // Calculate opacity of like/dislike indicators
   const likeOpacity = useTransform(x, [0, 125], [0, 1]);
   const dislikeOpacity = useTransform(x, [-125, 0], [1, 0]);
-  
+
   // Reset animation controls when currentIndex changes
   useEffect(() => {
     if (!exiting) {
@@ -63,11 +62,11 @@ export default function SwipeableCardStack() {
   };
 
   // Handle the end of a drag/swipe
-  const handleDragEnd = (_: any, info: PanInfo) => {
+  const handleDragEnd = (_event: unknown, info: PanInfo) => {
     if (exiting) return;
-    
+
     const threshold = 100; // minimum distance required for a swipe
-    
+
     if (info.offset.x > threshold) {
       // Swipe right (like)
       handleSwipeAnimation('right');
@@ -87,10 +86,10 @@ export default function SwipeableCardStack() {
   // Common animation logic for swiping
   const handleSwipeAnimation = (dir: 'left' | 'right') => {
     if (exiting) return;
-    
-    setDirection(dir);
+
+    // setDirection(dir);
     setExiting(true);
-    
+
     controls.start({
       x: dir === 'left' ? -500 : 500,
       opacity: 0,
@@ -99,8 +98,7 @@ export default function SwipeableCardStack() {
       // After animation completes
       setCurrentIndex(prevIndex => prevIndex + 1);
       setExiting(false);
-      setDirection(null);
-      
+
       // Reset position for next card
       x.set(0);
       y.set(0);
@@ -113,14 +111,15 @@ export default function SwipeableCardStack() {
     handleSwipeAnimation(dir);
   };
 
+  // Reset UI
   if (needsReset) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-[70vh] text-center">
-        <p className="text-xl text-ash-gray mb-6">You've seen all available auras</p>
-        <button 
+        <p className="text-xl text-muted-foreground mb-6">You&apos;ve seen all available auras</p>
+        <button
           onClick={handleReset}
-          className="flex items-center gap-2 px-6 py-3 bg-amethyst text-eggshell rounded-full
-                     hover:bg-custom-purple-light transition-colors duration-300 shadow-primary"
+          className="flex items-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-full
+                   hover:bg-custom-purple-light transition-colors duration-300 shadow-[var(--shadow-primary)]"
         >
           <RefreshCw size={22} />
           <span>Discover More Auras</span>
@@ -132,22 +131,24 @@ export default function SwipeableCardStack() {
   // Current card to show
   const currentCard = cards[currentIndex];
 
+  // Error state
   if (!currentCard) {
     return <p className="text-custom-text-secondary">No auras to display.</p>;
   }
 
+  // Main UI
   return (
     <div className="w-full max-w-xs sm:max-w-sm mx-auto">
       {/* Card counter */}
-      <p className="text-center mb-4 text-sm text-ash-gray">
+      <p className="text-center mb-4 text-sm text-muted-foreground">
         {currentIndex + 1} of {cards.length}
       </p>
-      
+
       {/* Card container with relative positioning */}
       <div className="relative w-full h-[450px] sm:h-[500px] mb-8">
         {/* Swipeable card using framer-motion */}
         <motion.div
-          key={currentIndex} // Key helps React recreate component on index change
+          key={currentIndex}
           ref={cardRef}
           className="absolute inset-0 cursor-grab active:cursor-grabbing touch-manipulation"
           style={{ x, y, rotate }}
@@ -159,21 +160,21 @@ export default function SwipeableCardStack() {
           onDragEnd={handleDragEnd}
         >
           {/* Like indicator */}
-          <motion.div 
-            className="absolute top-10 right-10 z-20 rotate-12 border-4 border-green-500 rounded-lg px-2 py-1"
+          <motion.div
+            className="absolute top-10 right-10 z-20 rotate-12 border-4 border-primary rounded-lg px-2 py-1"
             style={{ opacity: likeOpacity }}
           >
-            <span className="text-green-500 font-bold text-xl">LIKE</span>
+            <span className="text-primary font-bold text-xl">LIKE</span>
           </motion.div>
-          
+
           {/* Dislike indicator */}
-          <motion.div 
-            className="absolute top-10 left-10 z-20 -rotate-12 border-4 border-red-500 rounded-lg px-2 py-1"
+          <motion.div
+            className="absolute top-10 left-10 z-20 -rotate-12 border-4 border-destructive rounded-lg px-2 py-1"
             style={{ opacity: dislikeOpacity }}
           >
-            <span className="text-red-500 font-bold text-xl">NOPE</span>
+            <span className="text-destructive font-bold text-xl">NOPE</span>
           </motion.div>
-          
+
           {/* The actual card */}
           <AuraCard aura={currentCard} />
         </motion.div>
@@ -181,28 +182,28 @@ export default function SwipeableCardStack() {
 
       {/* Action buttons */}
       <div className="flex justify-center items-center gap-5 mt-4">
-        <button 
+        <button
           onClick={() => handleSwipe('left')}
-          className="p-4 bg-gray-700/70 rounded-full text-red-400 hover:bg-red-500 hover:text-white
-                   transition-colors duration-300 shadow-md"
+          className="p-4 bg-card/90 rounded-full text-destructive hover:bg-destructive hover:text-card
+                 transition-colors duration-300 shadow-[var(--shadow-primary)]"
           aria-label="Dislike"
           disabled={exiting}
         >
           <X size={28} />
         </button>
-        <button 
+        <button
           onClick={handleReset}
-          className="p-3 bg-gray-700/70 rounded-full text-ash-gray hover:bg-tropical-indigo hover:text-white
-                   transition-colors duration-300 shadow-md"
+          className="p-3 bg-card/90 rounded-full text-muted-foreground hover:bg-secondary hover:text-secondary-foreground
+                 transition-colors duration-300 shadow-[var(--shadow-primary)]"
           aria-label="Shuffle cards"
           disabled={exiting}
         >
           <RefreshCw size={22} />
         </button>
-        <button 
+        <button
           onClick={() => handleSwipe('right')}
-          className="p-4 bg-gray-700/70 rounded-full text-green-400 hover:bg-green-500 hover:text-white
-                   transition-colors duration-300 shadow-md"
+          className="p-4 bg-card/90 rounded-full text-primary hover:bg-primary hover:text-primary-foreground
+                 transition-colors duration-300 shadow-[var(--shadow-primary)]"
           aria-label="Like"
           disabled={exiting}
         >

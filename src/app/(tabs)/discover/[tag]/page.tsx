@@ -36,8 +36,8 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
   if (!currentTag || !aura) {
     return (
       <div className="page-container flex flex-col items-center justify-center min-h-full">
-        <h1 className="text-2xl mb-4">Aura not found</h1>
-        <Link href="/discover" className="text-amethyst hover:text-custom-purple-light flex items-center">
+        <h1 className="text-2xl mb-4 text-foreground">Aura not found</h1>
+        <Link href="/discover" className="text-secondary hover:text-secondary/80 flex items-center transition-colors">
           <ArrowLeft size={20} className="mr-1" />
           Back to Discover
         </Link>
@@ -47,8 +47,9 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
 
   return (
     <div className="page-container">
-      <div className="sticky top-0 bg-raisin-black z-10 pt-4 pb-2">
-        <Link href="/discover" className="inline-flex items-center text-amethyst hover:text-custom-purple-light">
+      <div className="sticky top-0 bg-background z-10 pt-4 pb-2">
+        <Link href="/discover" 
+          className="inline-flex items-center text-secondary hover:text-secondary/80 transition-colors">
           <ArrowLeft size={20} className="mr-1" />
           Back
         </Link>
@@ -58,7 +59,7 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
         />
       </div>
 
-      <div className="fade-in-animation">
+      <div className="animate-[var(--animate-fade-in)]">
         <AuraDisplay aura={aura} />
         <div className="mt-8">
           <SimilarTagsRow

@@ -32,7 +32,7 @@ export default function InterestsPage() {
             {[0, 1, 2, 3, 4].map((i) => (
               <motion.div
                 key={i}
-                className="absolute rounded-full border border-custom-indigo-light opacity-30"
+                className="absolute rounded-full border border-secondary opacity-30"
                 style={{
                   width: `${(i + 3) * 30}px`,
                   height: `${(i + 3) * 30}px`,
@@ -52,7 +52,7 @@ export default function InterestsPage() {
             {[0, 1, 2, 3, 4].map((i) => (
               <motion.div
                 key={`bubble-${i}`}
-                className="absolute rounded-full bg-custom-purple-light shadow-lg flex items-center justify-center"
+                className="absolute rounded-full shadow-lg flex items-center justify-center"
                 style={{
                   width: `${Math.random() * 20 + 20}px`,
                   height: `${Math.random() * 20 + 20}px`,
@@ -76,7 +76,7 @@ export default function InterestsPage() {
                 }}
               >
                 <motion.div 
-                  className="w-full h-full rounded-full bg-gradient-to-tr from-custom-purple-dark to-custom-indigo-light"
+                  className={`w-full h-full rounded-full ${i % 3 === 0 ? 'bg-primary' : i % 3 === 1 ? 'bg-secondary' : 'bg-accent'}`}
                   animate={{ opacity: [0.8, 1, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
@@ -85,13 +85,13 @@ export default function InterestsPage() {
             
             {/* Central element */}
             <motion.div
-              className="w-20 h-20 rounded-full bg-gradient-to-r from-custom-purple-DEFAULT to-custom-indigo-DEFAULT shadow-lg flex items-center justify-center"
+              className="w-20 h-20 rounded-full bg-gradient-to-r from-secondary to-accent shadow-lg flex items-center justify-center"
               animate={{
                 scale: [1, 1.1, 1],
                 boxShadow: [
-                  "0 0 10px rgba(144, 103, 198, 0.4)",
-                  "0 0 20px rgba(144, 103, 198, 0.6)",
-                  "0 0 10px rgba(144, 103, 198, 0.4)"
+                  "0 0 10px rgba(161, 124, 255, 0.4)",
+                  "0 0 20px rgba(255, 126, 179, 0.6)",
+                  "0 0 10px rgba(161, 124, 255, 0.4)"
                 ]
               }}
               transition={{ duration: 3, repeat: Infinity }}
@@ -106,7 +106,7 @@ export default function InterestsPage() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-eggshell"
+                className="text-foreground"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               >
@@ -118,7 +118,7 @@ export default function InterestsPage() {
         </motion.div>
 
         {/* Title with animated underline */}
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-custom-purple-light to-custom-indigo-DEFAULT mb-4">
+        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent mb-4">
           Interests
         </h1>
         
@@ -126,14 +126,14 @@ export default function InterestsPage() {
           initial={{ width: 0 }}
           animate={{ width: "120px" }}
           transition={{ duration: 1.5 }}
-          className="h-1 bg-gradient-to-r from-custom-purple-DEFAULT to-custom-indigo-DEFAULT rounded-full mb-6"
+          className="h-1 bg-gradient-to-r from-secondary to-accent rounded-full mb-6"
         />
 
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="text-2xl font-medium text-eggshell mb-2"
+          className="text-2xl font-medium text-foreground mb-2"
         >
           Coming Soon
         </motion.p>
@@ -142,10 +142,10 @@ export default function InterestsPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
-          className="max-w-md text-ash-gray"
+          className="max-w-md text-muted-foreground"
         >
-          We're crafting a personalized interest discovery experience just for you. 
-          Soon you'll explore topics tailored to your unique preferences and connect 
+          We&apos;re crafting a personalized interest discovery experience just for you. 
+          Soon you&apos;ll explore topics tailored to your unique preferences and connect 
           with others who share your passions.
         </motion.p>
 
@@ -162,9 +162,9 @@ export default function InterestsPage() {
               animate={{
                 scale: [1, 1.5, 1],
                 backgroundColor: [
-                  "var(--color-custom-purple-DEFAULT)",
-                  "var(--color-custom-indigo-DEFAULT)",
-                  "var(--color-custom-purple-DEFAULT)"
+                  "var(--primary)",
+                  "var(--secondary)",
+                  "var(--accent)"
                 ]
               }}
               transition={{
@@ -180,7 +180,7 @@ export default function InterestsPage() {
                   repeatType: "reverse"
                 }
               }}
-              className="w-3 h-3 rounded-full bg-custom-purple-DEFAULT"
+              className="w-3 h-3 rounded-full bg-primary"
             />
           ))}
         </motion.div>

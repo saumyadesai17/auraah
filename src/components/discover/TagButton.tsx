@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { Tag } from '@/lib/data';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 interface TagButtonProps {
   tag: Tag;
@@ -8,13 +10,31 @@ interface TagButtonProps {
 }
 
 export default function TagButton({ tag, isActive = false, highlight = false }: TagButtonProps) {
-  let baseClasses = "px-4 py-2 rounded-full transition-all duration-200 text-sm font-medium flex items-center justify-center";
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
   
-  let styleClasses = isActive
-    ? "bg-tropical-indigo text-raisin-black border border-tropical-indigo"
-    : highlight
-    ? "bg-gray-700/90 text-tropical-indigo border border-tropical-indigo/40 hover:bg-tropical-indigo/20 hover:border-tropical-indigo"
-    : "bg-gray-700/80 text-tropical-indigo border border-transparent hover:bg-tropical-indigo hover:text-raisin-black";
+  // Handle mounting to avoid hydration mismatch
+  useEffect(() => setMounted(true), []);
+  
+  if (!mounted) return null;
+  
+  // Base classes
+  const baseClasses = "px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium flex items-center justify-center";
+  
+  // Dynamic styling based on theme, active state and highlight
+  let styleClasses = '';
+  
+  if (isActive) {
+    styleClasses = "bg-primary text-primary-foreground border border-primary shadow-md";
+  } else if (highlight) {
+    styleClasses = resolvedTheme === 'dark' 
+      ? "bg-secondary/20 text-secondary border border-secondary/40 hover:bg-secondary/30 hover:border-secondary hover:scale-105 hover:shadow-lg" 
+      : "bg-secondary/10 text-secondary border border-secondary/30 hover:bg-secondary/20 hover:border-secondary hover:scale-105 hover:shadow-lg";
+  } else {
+    styleClasses = resolvedTheme === 'dark'
+      ? "bg-background/80 backdrop-blur-sm text-foreground border border-border/50 hover:bg-primary/20 hover:text-primary hover:border-primary/40 hover:scale-105 hover:shadow-md"
+      : "bg-background/80 backdrop-blur-sm text-foreground border border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/40 hover:scale-105 hover:shadow-md";
+  }
   
   return (
     <Link
@@ -23,8 +43,10 @@ export default function TagButton({ tag, isActive = false, highlight = false }: 
     >
       {tag.name}
       {tag.type && (
-        <span className="ml-1 text-xs opacity-70">
-          ({tag.type.slice(0,1)})
+        <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
+          isActive ? 'bg-white/20' : 'bg-foreground/10'
+        }`}>
+          {tag.type.charAt(0).toUpperCase()}
         </span>
       )}
     </Link>

@@ -80,7 +80,7 @@ Formatting Rules:
       if (match) {
         jsonOutput = JSON.parse(match[0]);
       } else {
-        throw new Error('AI response is not valid JSON:\n' + rawOutput);
+        throw new Error(`AI response is not valid JSON: ${e}\n${rawOutput}`);
       }
     }
     // Fetch image from Wikipedia API
