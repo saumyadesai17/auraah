@@ -83,10 +83,28 @@ Formatting Rules:
         throw new Error(`AI response is not valid JSON: ${e}\n${rawOutput}`);
       }
     }
+
+    // Fetch image from Unsplash API
+    const unsplashAccessKey = process.env.UNSPLASH_ACCESS_KEY;
+    const unsplashResponse = await fetch(
+    `https://api.unsplash.com/search/photos?query=${encodeURIComponent(name)}&client_id=${unsplashAccessKey}&per_page=1`
+    );
+    const unsplashData = await unsplashResponse.json();
+
+    let imageUrl = null;
+    if (unsplashData?.results?.length > 0) {
+    imageUrl = unsplashData.results[0].urls?.regular;
+    }
+    if (imageUrl) {
+      jsonOutput.imageUrl = imageUrl;
+    } else {
+      jsonOutput.imageUrl = 'https://via.placeholder.com/150'; // Fallback image
+    }
     // Fetch image from Wikipedia API
     return NextResponse.json({
       name,
       ...jsonOutput,
+      urlOfImage: imageUrl,
     });
 
   } catch (err: unknown) {
