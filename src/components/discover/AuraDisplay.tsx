@@ -5,15 +5,22 @@ import { useState, useEffect } from 'react';
 
 interface AuraDisplayProps {
   aura: Aura | undefined;
+  auraScore?: number;
+  auraReason?: string;
 }
 
-export default function AuraDisplay({ aura }: AuraDisplayProps) {
+export default function AuraDisplay({ aura, auraScore: providedScore }: AuraDisplayProps) {
   const [auraScore, setAuraScore] = useState<number | null>(null);
 
   useEffect(() => {
-    // Generate random score only on the client side
-    setAuraScore(Math.floor(Math.random() * 50) + 50);
-  }, [aura?.name]); // Regenerate when aura changes
+    // If a score is provided, use it. Otherwise generate a random one
+    if (providedScore !== undefined) {
+      setAuraScore(providedScore);
+    } else {
+      // Generate random score only on the client side
+      setAuraScore(Math.floor(Math.random() * 50) + 50);
+    }
+  }, [aura?.name, providedScore]); // Regenerate when aura changes
 
   if (!aura) {
     return <p className="text-center text-destructive">Aura not found.</p>;
@@ -65,9 +72,7 @@ export default function AuraDisplay({ aura }: AuraDisplayProps) {
         <div className="mt-8 pt-6 border-t border-border/40">
           <h3 className="text-base font-medium text-foreground mb-3">Claim to fame</h3>
           <p className="text-muted-foreground text-sm">
-            Known for {aura.info} Their influence on {aura.type === 'person' ? 'society' : 
-              aura.type === 'brand' ? 'consumers' : 'culture'} has been significant 
-            throughout modern history.
+            {aura.info}
           </p>
         </div>
         

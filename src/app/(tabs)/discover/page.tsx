@@ -1,8 +1,10 @@
 'use client';
 
 import TagGroup from '@/components/discover/TagGroup';
+import SearchBox from '@/components/discover/SearchBox';
 import { getTagsByType } from '@/lib/data';
 import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 
 export default function DiscoverPage() {
   const peopleTags = getTagsByType('person');
@@ -22,7 +24,7 @@ export default function DiscoverPage() {
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.6 }}
-        className="space-y-8 py-6 relative"
+        className="space-y-10 py-6 relative"
       >
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -30,25 +32,50 @@ export default function DiscoverPage() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="relative z-10"
         >
-            <h1 className="h1-title text-4xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Discover Auras
-            </h1>
-            <h2 className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-xl">
-              Explore auras by people, places, and brands to find connections and discover new perspectives.
-            </h2>
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            Discover Auras
+          </h1>
+          <h2 className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-xl">
+            Explore auras by people, places, and brands to find connections and discover new perspectives.
+          </h2>
         </motion.div>
         
-        <div className="grid gap-8 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }}>
+        {/* Enhanced search section */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6"
+        >
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Sparkles className="text-primary" size={20} />
+            <h3 className="text-lg font-semibold text-foreground">AI-Powered Aura Search</h3>
+          </div>
+          <p className="text-center text-muted-foreground mb-5 max-w-lg mx-auto">
+            Search for <span className="text-primary">any person, place or brand</span> - even those not in our catalog!
+            Our AI will generate a unique aura profile and related connections.
+          </p>
+          <SearchBox />
+        </motion.div>
+        
+        {/* Our curated catalog section */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="relative z-10"
+        >
+          <h3 className="text-xl font-semibold mb-4 text-center">Our Curated Collection</h3>
+          <p className="text-center text-muted-foreground mb-8 max-w-lg mx-auto">
+            Browse our handpicked selection of popular auras or use the search above to explore beyond.
+          </p>
+          
+          <div className="grid gap-8">
             <TagGroup title="People" tags={peopleTags} />
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5 }}>
             <TagGroup title="Places" tags={placesTags} />
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}>
             <TagGroup title="Brands" tags={brandsTags} />
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );
