@@ -29,7 +29,7 @@ export default function SimilarTagsRow({ tags, currentTagId }: SimilarTagsRowPro
           const isAiTag = tag.id.startsWith('ai-tag');
           const href = isAiTag
             ? `/discover/search?q=${encodeURIComponent(tag.name)}`
-            : `/discover/${encodeURIComponent(tag.id)}`;
+            : `/discover/tag?id=${encodeURIComponent(tag.id)}`;
 
           return (
             <motion.div

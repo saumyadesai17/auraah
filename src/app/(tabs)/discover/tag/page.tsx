@@ -1,6 +1,7 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getTagById, Tag } from '@/lib/data';
 import AuraDisplay from '@/components/discover/AuraDisplay';
 import SimilarTagsRow from '@/components/discover/SimilarTagsRow';
@@ -10,17 +11,12 @@ import { satoshi } from '@/fonts/satoshi';
 import { getAuraColor } from '@/lib/aura';
 import { Aura } from '@/lib/data';
 
-interface DiscoverTagPageProps {
-  params: Promise<{
-    tag: string;
-  }>;
-}
+// Create a client component that uses useSearchParams
+function TagContent() {
+  const searchParams = useSearchParams();
+  const tagId = searchParams.get('id');
 
-export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
-  const { tag } = use(params); // unwraps the Promise using React.use
-  const tagId = decodeURIComponent(tag);
-
-  const currentTag: Tag | undefined = getTagById(tagId);
+  const currentTag: Tag | undefined = tagId ? getTagById(decodeURIComponent(tagId)) : undefined;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +47,6 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
 
           const data = await response.json();
           setAiData(data);
-          console.log('AI Data:', data);
           // Process the recommendedHashtags
           if (data.recommendedHashtags) {
             const hashtags = data.recommendedHashtags
@@ -83,7 +78,7 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
     }
   }, [currentTag]);
 
-  if (!currentTag) {
+  if (!tagId || !currentTag) {
     return (
       <div className="page-container flex flex-col items-center justify-center min-h-full bg-gray-50 p-4">
         <h1 className="text-2xl mb-4 text-gray-700">Aura not found</h1>
@@ -129,29 +124,48 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
           </div>
         ) : aiData ? (
           <>
-    <AuraDisplay
-      aura={{
-        id: currentTag.auraId,
-        name: currentTag.name,
-        type: aiData.type || currentTag.type,
-        auraColor: getAuraColor(aiData.type || currentTag.type),
-        info: aiData.description || '',
-        claimToFame: aiData.claimToFame,
-        imageUrl: aiData.imageUrl // Add the imageUrl from API response
-      }}
-      auraScore={aiData.auraMeter}
-      auraReason={aiData.auraReason}
-    />
+            <AuraDisplay
+              aura={{
+                id: currentTag.auraId,
+                name: currentTag.name,
+                type: aiData.type || currentTag.type,
+                auraColor: getAuraColor(aiData.type || currentTag.type),
+                info: aiData.description || '',
+                claimToFame: aiData.claimToFame,
+                imageUrl: aiData.imageUrl
+              }}
+              auraScore={aiData.auraMeter}
+              auraReason={aiData.auraReason}
+            />
 
-    <div className="mt-10">
-      <SimilarTagsRow
-        tags={recommendedTags}
-        currentTagId={currentTag.id}
-      />
-    </div>
-  </>
+            <div className="mt-10">
+              <SimilarTagsRow
+                tags={recommendedTags}
+                currentTagId={currentTag.id}
+              />
+            </div>
+          </>
         ) : null}
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function TagPageLoading() {
+  return (
+    <div className="page-container flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin"></div>
+      <p className="mt-4 text-gray-600">Loading tag details...</p>
+    </div>
+  );
+}
+
+// Main page component that wraps the content with Suspense
+export default function DiscoverTagPage() {
+  return (
+    <Suspense fallback={<TagPageLoading />}>
+      <TagContent />
+    </Suspense>
   );
 }

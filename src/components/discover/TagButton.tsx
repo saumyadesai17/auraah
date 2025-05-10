@@ -45,7 +45,7 @@ export default function TagButton({ tag }: TagButtonProps) {
   
   return (
     <Link
-      href={`/discover/${encodeURIComponent(tag.id)}`}
+      href={`/discover/tag?id=${encodeURIComponent(tag.id)}`}
       className="flex items-center px-4 py-2 rounded-full 
                  bg-gray-100 hover:bg-gray-200 
                  text-gray-700 hover:text-gray-900
