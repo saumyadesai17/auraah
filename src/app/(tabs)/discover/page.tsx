@@ -2,80 +2,86 @@
 
 import TagGroup from '@/components/discover/TagGroup';
 import SearchBox from '@/components/discover/SearchBox';
-import { getTagsByType } from '@/lib/data';
+import { getTagsByType, Tag } from '@/lib/data'; // Ensure Tag is imported if used directly
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, TrendingUp, User, MapPin, Heart } from 'lucide-react';
+import { satoshi } from '@/fonts/satoshi';
 
 export default function DiscoverPage() {
   const peopleTags = getTagsByType('person');
   const placesTags = getTagsByType('place');
   const brandsTags = getTagsByType('brand');
 
+  // For "Suggested For You", you might want to combine or select specific tags.
+  // Here, we'll combine places and brands for demonstration.
+  const suggestedTags: Tag[] = [...placesTags.slice(0, 3), ...brandsTags.slice(0, 2)]; // Example: mix of 3 places and 2 brands
+  const allTags = [...peopleTags, ...placesTags, ...brandsTags];
+  const trendingTags: Tag[] = [...allTags].sort(() => Math.random() - 0.5).slice(0, 5);
+
   return (
-    <div className="page-container relative z-0 overflow-hidden">
-      {/* Full-screen background decoration elements */}
-      <div className="fixed inset-0 pointer-events-none -z-10">
-        <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-primary/5 dark:bg-primary/10 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4"></div>
-        <div className="absolute bottom-0 left-0 w-[60vw] h-[60vh] bg-secondary/5 dark:bg-secondary/10 rounded-full blur-3xl transform -translate-x-1/4 translate-y-1/4"></div>
-        <div className="absolute top-1/2 left-1/2 w-[40vw] h-[40vh] bg-accent/5 dark:bg-accent/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
-      </div>
-      
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 0.6 }}
-        className="space-y-10 py-6 relative"
+    <div className="page-container bg-white min-h-screen">
+
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mt-10 mb-20"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="relative z-10"
-        >
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            Discover Auras
-          </h1>
-          <h2 className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-xl">
-            Explore auras by people, places, and brands to find connections and discover new perspectives.
-          </h2>
-        </motion.div>
-        
-        {/* Enhanced search section */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6"
-        >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="text-primary" size={20} />
-            <h3 className="text-lg font-semibold text-foreground">AI-Powered Aura Search</h3>
-          </div>
-          <p className="text-center text-muted-foreground mb-5 max-w-lg mx-auto">
-            Search for <span className="text-primary">any person, place or brand</span> - even those not in our catalog!
-            Our AI will generate a unique aura profile and related connections.
-          </p>
-          <SearchBox />
-        </motion.div>
-        
-        {/* Our curated catalog section */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="relative z-10"
-        >
-          <h3 className="text-xl font-semibold mb-4 text-center">Our Curated Collection</h3>
-          <p className="text-center text-muted-foreground mb-8 max-w-lg mx-auto">
-            Browse our handpicked selection of popular auras or use the search above to explore beyond.
-          </p>
-          
-          <div className="grid gap-8">
-            <TagGroup title="People" tags={peopleTags} />
-            <TagGroup title="Places" tags={placesTags} />
-            <TagGroup title="Brands" tags={brandsTags} />
-          </div>
-        </motion.div>
+        <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
+          Discover people, places,
+        </h1>
+        <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
+          brands, food - literally 
+        </h1>
+        <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
+          anything that excites you
+        </h1>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className='pb-6'
+      >
+        <SearchBox />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className={`space-y-8 mt-12 ${satoshi.className}`}
+      >
+        <TagGroup
+          title="Trending Now"
+          tags={trendingTags} // Use the trending tags
+          icon={<TrendingUp size={20} />}
+        />
+
+        <TagGroup
+          title="Suggested For You"
+          tags={suggestedTags} // Use the combined/selected list
+          icon={<Sparkles size={20} />}
+        />
+
+        <TagGroup
+          title="Popular People"
+          tags={peopleTags.slice(0, 8)}
+          icon={<User size={20} />} // Example if you want a dedicated people section
+        />
+
+        <TagGroup
+          title="Popular Places"
+          tags={placesTags.slice(0, 8)}
+          icon={<MapPin size={20} />} // Example if you want a dedicated places section
+        />
+
+        <TagGroup
+          title="Popular Brands"
+          tags={brandsTags.slice(0, 8)}
+          icon={<Heart size={20} />} // Example if you want a dedicated brands section
+        />
       </motion.div>
     </div>
   );

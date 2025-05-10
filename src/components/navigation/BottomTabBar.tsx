@@ -14,25 +14,27 @@ export default function BottomTabBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-md 
-                   bg-card/90 border border-border 
-                   rounded-xl shadow-[var(--shadow-primary)] z-50">
-      <div className="flex justify-around items-center h-14">
+    // The parent div in (tabs)/layout.tsx now handles bg-white and border-t
+    <nav className="w-full md:hidden"> {/* Removed fixed positioning, bg, border, shadow as it's handled by parent */}
+      <div className="flex justify-around items-center h-16 max-w-md mx-auto">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href === '/discover' && pathname.startsWith('/discover/'));
+          const isActive = pathname === item.href ||
+                           (item.href === '/discover' && pathname.startsWith('/discover')) ||
+                           (item.href === '/explore' && pathname.startsWith('/explore')) ||
+                           (item.href === '/interests' && pathname.startsWith('/interests'));
+          
           return (
             <Link
               key={item.label}
               href={item.href}
-              className={`flex flex-col items-center justify-center p-2 w-1/3 h-full
+              className={`flex flex-col items-center justify-center p-1 w-1/3 h-full
                 transition-colors duration-200
-                ${isActive ? 'text-secondary' : 'text-muted-foreground hover:text-foreground'}`}
+                ${isActive ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
             >
-              <div className={`p-1 rounded-md ${isActive ? 'bg-secondary/10' : ''}`}>
-                <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-              </div>
-              <span className={`mt-1 text-xs font-medium
-                ${isActive ? 'text-secondary font-semibold' : 'text-muted-foreground'}`}>
+              {/* Removed background div around icon for cleaner look */}
+              <item.icon size={24} strokeWidth={isActive ? 2 : 1.5} />
+              <span className={`mt-1 text-xs 
+                ${isActive ? 'font-medium text-gray-900' : 'font-normal text-gray-600'}`}>
                 {item.label}
               </span>
             </Link>

@@ -1,35 +1,34 @@
 import { Tag } from '@/lib/data';
 import TagButton from '@/components/discover/TagButton';
 import { motion } from 'framer-motion';
+import React from 'react'; // Import React for JSX.Element type
 
 interface TagGroupProps {
   title: string;
   tags: Tag[];
+  icon?: React.ReactNode; // Accept an optional icon node
 }
 
-export default function TagGroup({ title, tags }: TagGroupProps) {
+export default function TagGroup({ title, tags, icon }: TagGroupProps) {
   if (!tags || tags.length === 0) {
     return null;
   }
 
   return (
-    <section className="group">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-foreground group-hover:text-secondary transition-colors">
+    <section className="my-8">
+      <div className="flex items-center mb-4">
+        {icon && <span className="mr-2 text-gray-500">{icon}</span>}
+        <h2 className="text-lg font-medium text-gray-600">
           {title}
-          <div className="h-1 w-12 bg-gradient-to-r from-primary to-secondary mt-1 rounded-full"></div>
         </h2>
-        <span className="text-xs bg-primary/10 dark:bg-primary/20 text-primary px-3 py-1 rounded-full">
-          {tags.length}
-        </span>
       </div>
-      <div className="flex flex-wrap gap-3 backdrop-blur-sm bg-background/50 dark:bg-background/30 p-4 rounded-lg border border-border/50 hover:border-border transition-all shadow-sm hover:shadow-md">
+      <div className="flex flex-wrap gap-3">
         {tags.map((tag, index) => (
           <motion.div 
             key={tag.id}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05, duration: 0.3 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.03, duration: 0.3 }}
           >
             <TagButton tag={tag} />
           </motion.div>
