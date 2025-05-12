@@ -38,7 +38,7 @@ function SearchPageContent() {
             try {
                 setLoading(true);
                 setError(null); // Reset error state
-                const response = await fetch('/api/ai_aura', {
+                const response = await fetch('/api/groq', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

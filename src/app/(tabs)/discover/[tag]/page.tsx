@@ -49,7 +49,7 @@ export default function DiscoverTagPage({ params }: DiscoverTagPageProps) {
       async function fetchAuraData() {
         try {
           setLoading(true);
-          const response = await fetch('/api/ai_aura', {
+          const response = await fetch('/api/groq', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
