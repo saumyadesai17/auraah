@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/ui/ThemeProvider";
+// import { ThemeProvider } from "@/components/ui/ThemeProvider"; // Removed
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,11 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-background text-foreground antialiased`}>
-        <ThemeProvider>
+    <html lang="en">
+      <body className={`${inter.className} bg-white text-gray-800 antialiased`}> {/* Adjusted for light theme */}
+        {/* <ThemeProvider> */} {/* Removed ThemeProvider wrapper */}
           {children}
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

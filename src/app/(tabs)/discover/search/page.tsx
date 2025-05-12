@@ -7,16 +7,10 @@ import { ArrowLeft } from 'lucide-react';
 import AuraDisplay from '@/components/discover/AuraDisplay';
 import SimilarTagsRow from '@/components/discover/SimilarTagsRow';
 import { Tag } from '@/lib/data';
-import { motion } from 'framer-motion';
+import { satoshi } from '@/fonts/satoshi';
+import { Aura } from '@/lib/data';
+import { getAuraColor, getEntityType } from '@/lib/aura';
 
-interface AiAuraResponse {
-    name: string;
-    description: string;
-    claimToFame: string;
-    recommendedHashtags: string;
-    auraMeter: number;
-    auraReason: string;
-}
 
 // This component contains the original logic and uses useSearchParams
 function SearchPageContent() {
@@ -25,7 +19,7 @@ function SearchPageContent() {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [aiData, setAiData] = useState<AiAuraResponse | null>(null);
+    const [aiData, setAiData] = useState<Aura | null>(null);
     const [recommendedTags, setRecommendedTags] = useState<Tag[]>([]);
 
     useEffect(() => {
@@ -53,7 +47,7 @@ function SearchPageContent() {
 
                 const data = await response.json();
                 setAiData(data);
-
+                console.log('AI Data:', data);
                 if (data.recommendedHashtags) {
                     let type: 'person' | 'place' | 'brand' = 'brand';
                     const desc = data.description?.toLowerCase() || '';
@@ -100,88 +94,63 @@ function SearchPageContent() {
         );
     }
 
-    const entityType = getEntityType(aiData?.description);
-
     return (
-        <div className="page-container">
-            <div className="sticky top-0 bg-background z-10 pt-4 pb-2">
-                <Link href="/discover"
-                    className="inline-flex items-center text-secondary hover:text-secondary/80 transition-colors">
-                    <ArrowLeft size={20} className="mr-1" />
-                    Back to Discover
-                </Link>
-                {query && <h2 className="text-xl font-semibold mt-2">Results for &quot;{query}&quot;</h2>}
+        <div className={`${satoshi.className} page-container bg-gray-50 min-h-screen p-4 md:p-6`}>
+            <div className="my-8">
+                <h1 className="text-3xl font-bold text-gray-800 mb-5">
+                    Showing results for &quot;{query}&quot;
+                </h1>
+
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                        <span className="text-gray-600 mr-2">Categories:</span>
+                        <select className="border border-gray-300 rounded-md py-1 px-3 bg-white text-gray-700">
+                            <option>All</option>
+                        </select>
+                    </div>
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="animate-[var(--animate-fade-in)] py-4" // Added py-4
-            >
+            <div className="animate-[var(--animate-fade-in)] max-w-3xl mx-auto">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh]">
-                        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                        <p className="mt-4 text-muted-foreground">Generating aura for &quot;{query}&quot;...</p>
+                        <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin"></div>
+                        <p className="mt-4 text-gray-600">Generating aura for &quot;{query}&quot;...</p>
                     </div>
                 ) : error ? (
-                    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-                        <p className="text-destructive mb-2">{error}</p>
-                        <Link href="/discover" className="text-secondary hover:text-secondary/80 flex items-center transition-colors">
-                            <ArrowLeft size={20} className="mr-1" />
-                            Try another search
-                        </Link>
+                    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-4 bg-white rounded-lg shadow">
+                        <p className="text-red-600 mb-2 text-lg">{error}</p>
                     </div>
                 ) : aiData ? (
-                    <div className="space-y-8">
+                    <>
                         <AuraDisplay
                             aura={{
-                                id: `search-${aiData.name}-${Date.now()}`, // More unique ID
+                                id: `search-${aiData.name}-${Date.now()}`,
                                 name: aiData.name,
-                                type: entityType,
-                                auraColor: getAuraColor(entityType),
-                                info: aiData.claimToFame
+                                type: aiData.type || getEntityType(aiData.description),
+                                auraColor: getAuraColor(aiData.type || getEntityType(aiData.description)),
+                                info: aiData.description || '',
+                                claimToFame: aiData.claimToFame,
+                                imageUrl: aiData.imageUrl // Add the imageUrl from API response
                             }}
                             auraScore={aiData.auraMeter}
                             auraReason={aiData.auraReason}
                         />
 
-                        {aiData.auraReason && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2, duration: 0.4 }} // Adjusted delay
-                                className="mt-6 p-4 bg-card/60 backdrop-blur-sm border border-border/40 rounded-lg"
-                            >
-                                <h3 className="text-lg font-medium mb-2">Aura Analysis</h3>
-                                <p className="text-muted-foreground">{aiData.auraReason}</p>
-                            </motion.div>
-                        )}
-
-                        {recommendedTags.length > 0 && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.4 }} // Adjusted delay
-                                className="mt-8"
-                            >
-                                <SimilarTagsRow
-                                    tags={recommendedTags}
-                                    highlightedType={entityType}
-                                />
-                            </motion.div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-                        <p className="text-muted-foreground mb-2">No aura data found for &quot;{query}&quot;.</p>
-                         <Link href="/discover" className="text-secondary hover:text-secondary/80 flex items-center transition-colors">
-                            <ArrowLeft size={20} className="mr-1" />
-                            Try another search
-                        </Link>
-                    </div>
-                )}
-            </motion.div>
+                        <div className="mt-10">
+                            <SimilarTagsRow
+                                tags={recommendedTags}
+                            />
+                        </div>
+                    </>
+                ) : null}
+            </div>
         </div>
     );
 }
@@ -198,32 +167,4 @@ export default function SearchPage() {
             <SearchPageContent />
         </Suspense>
     );
-}
-
-// Helper functions (can be kept here or moved if preferred)
-const getEntityType = (description?: string): 'person' | 'place' | 'brand' => {
-    // ...existing code...
-    if (!description) return 'brand';
-    const desc = description.toLowerCase();
-    if (desc.includes('person')) {
-        return 'person';
-    }
-    if (desc.includes('place')) {
-        return 'place';
-    }
-    return 'brand';
-};
-
-function getAuraColor(type: 'person' | 'place' | 'brand'): string {
-    // ...existing code...
-    switch (type) {
-        case 'person':
-            return 'bg-primary/80';
-        case 'place':
-            return 'bg-secondary/80';
-        case 'brand':
-            return 'bg-accent/80';
-        default:
-            return 'bg-primary/80';
-    }
 }

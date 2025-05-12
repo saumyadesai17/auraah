@@ -1,16 +1,21 @@
 export interface Aura {
   id: string;
   name: string;
-  type: 'person' | 'place' | 'brand';
+  type: 'person' | 'fictional character' | 'place' | 'brand' | 'thing';
   auraColor: string; // Hex color or Tailwind color class
   info: string;
   imageUrl?: string; // Optional image for the card
+  claimToFame?: string; // Specific claim to fame
+  auraScore?: number; // Score from AI analysis
+  auraReason?: string; // Reason for the score
+  description?: string; // Description of the aura
+  auraMeter?: number; // Score from 1 to 100
 }
 
 export interface Tag {
   id: string;
   name: string;
-  type: 'person' | 'place' | 'brand';
+  type: 'person' | 'fictional character' | 'place' | 'brand' | 'thing';
   auraId: string; // ID of the corresponding Aura
 }
 

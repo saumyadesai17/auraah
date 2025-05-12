@@ -1,54 +1,58 @@
 import Link from 'next/link';
 import { Tag } from '@/lib/data';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { User, MapPin, Heart } from 'lucide-react';
+import { useEffect, useState } from 'react'; // Import useEffect and useState
 
 interface TagButtonProps {
   tag: Tag;
-  isActive?: boolean;
-  highlight?: boolean;
 }
 
-export default function TagButton({ tag, isActive = false, highlight = false }: TagButtonProps) {
+export default function TagButton({ tag }: TagButtonProps) {
   const [mounted, setMounted] = useState(false);
-  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getIcon = (type: Tag['type']) => {
+    const iconProps = { size: 16, className: "mr-2" };
+    switch(type) {
+      case 'person':
+        return <User {...iconProps} className={`${iconProps.className} text-purple-500`} />;
+      case 'place':
+        return <MapPin {...iconProps} className={`${iconProps.className} text-sky-500`} />;
+      case 'brand': // Assuming 'brand' uses a Heart icon as per general category styling
+        return <Heart {...iconProps} className={`${iconProps.className} text-red-500`} />;
+      default:
+        return <User {...iconProps} className={`${iconProps.className} text-gray-500`} />;
+    }
+  };
   
-  // Handle mounting to avoid hydration mismatch
-  useEffect(() => setMounted(true), []);
-  
-  if (!mounted) return null;
-  
-  // Base classes
-  const baseClasses = "px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium flex items-center justify-center";
-  
-  // Dynamic styling based on theme, active state and highlight
-  let styleClasses = '';
-  
-  if (isActive) {
-    styleClasses = "bg-primary text-primary-foreground border border-primary shadow-md";
-  } else if (highlight) {
-    styleClasses = resolvedTheme === 'dark' 
-      ? "bg-secondary/20 text-secondary border border-secondary/40 hover:bg-secondary/30 hover:border-secondary hover:scale-105 hover:shadow-lg" 
-      : "bg-secondary/10 text-secondary border border-secondary/30 hover:bg-secondary/20 hover:border-secondary hover:scale-105 hover:shadow-lg";
-  } else {
-    styleClasses = resolvedTheme === 'dark'
-      ? "bg-background/80 backdrop-blur-sm text-foreground border border-border/50 hover:bg-primary/20 hover:text-primary hover:border-primary/40 hover:scale-105 hover:shadow-md"
-      : "bg-background/80 backdrop-blur-sm text-foreground border border-border/50 hover:bg-primary/10 hover:text-primary hover:border-primary/40 hover:scale-105 hover:shadow-md";
+  if (!mounted) {
+    // Return null or a placeholder to prevent rendering on the server or before client-side mount
+    // This can help avoid hydration mismatches.
+    // For a button, returning null is often acceptable if it's not critical for SSR.
+    return null; 
+  }
+
+  // Ensure tag and tag.id are valid before using them
+  if (!tag || typeof tag.id === 'undefined') {
+    // Handle the case where tag or tag.id is not available
+    // You might want to log an error or return a fallback UI
+    console.error("Tag or tag.id is undefined in TagButton");
+    return null; 
   }
   
   return (
     <Link
-      href={`/discover/${encodeURIComponent(tag.id)}`}
-      className={`${baseClasses} ${styleClasses} ${isActive ? 'cursor-default' : ''}`}
+      href={`/discover/tag?id=${encodeURIComponent(tag.id)}`}
+      className="flex items-center px-4 py-2 rounded-full 
+                 bg-gray-100 hover:bg-gray-200 
+                 text-gray-700 hover:text-gray-900
+                 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
     >
+      {getIcon(tag.type)}
       {tag.name}
-      {tag.type && (
-        <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
-          isActive ? 'bg-white/20' : 'bg-foreground/10'
-        }`}>
-          {tag.type.charAt(0).toUpperCase()}
-        </span>
-      )}
     </Link>
   );
 }
