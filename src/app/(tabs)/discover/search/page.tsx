@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import AuraDisplay from '@/components/discover/AuraDisplay';
 import SimilarTagsRow from '@/components/discover/SimilarTagsRow';
+import { motion } from "framer-motion";
 import { Tag } from '@/lib/data';
 import { satoshi } from '@/fonts/satoshi';
 import { Aura } from '@/lib/data';
@@ -120,8 +121,41 @@ function SearchPageContent() {
             <div className="animate-[var(--animate-fade-in)] max-w-3xl mx-auto">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh]">
-                        <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin"></div>
-                        <p className="mt-4 text-gray-600">Generating aura for &quot;{query}&quot;...</p>
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 200 }}
+                            className="flex space-x-2 mb-4"
+                        >
+                            {[0, 1, 2].map((i) => (
+                                <motion.div
+                                    key={i}
+                                    animate={{
+                                        scale: [1, 1.5, 1],
+                                        backgroundColor: [
+                                            "var(--primary)",
+                                            "var(--secondary)",
+                                            "var(--accent)"
+                                        ]
+                                    }}
+                                    transition={{
+                                        scale: {
+                                            duration: 1.5,
+                                            repeat: Infinity,
+                                            repeatType: "loop",
+                                            delay: i * 0.3,
+                                        },
+                                        backgroundColor: {
+                                            duration: 3,
+                                            repeat: Infinity,
+                                            repeatType: "reverse"
+                                        }
+                                    }}
+                                    className="w-3 h-3 rounded-full bg-primary"
+                                />
+                            ))}
+                        </motion.div>
+                        <p className="text-gray-600">Generating aura for &quot;{query}&quot;...</p>
                     </div>
                 ) : error ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-4 bg-white rounded-lg shadow">

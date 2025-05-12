@@ -34,7 +34,6 @@ const getTypeIcon = (type: string) => typeIconMap[type] ?? <Package size={20} cl
 
 export default function AuraDisplay({ aura, auraScore: providedScore, auraReason }: AuraDisplayProps) {
   const [auraScore, setAuraScore] = useState<number | null>(null);
-  const [showTooltip, setShowTooltip] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
@@ -124,9 +123,9 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
 
         {/* Aura Score - styled to match reference image */}
         {auraScore !== null && (
-          <div className="mb-2">
+          <div className="mb-6">
             <h3 className="text-sm font-bold text-gray-500 mb-2 text-left">Aura Score :</h3>
-            <div className="flex items-center justify-start">
+            <div className="flex items-center justify-start mb-6">
               {/* Gradient border wrapper */}
               <div
                 className="p-[1px] rounded-full"
@@ -140,23 +139,15 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
                   <span className="font-bold text-gray-800 text-lg">{auraScore}</span>
                 </div>
               </div>
-              <div className="relative ml-2 text-gray-400">
-                <span
-                  className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-gray-300 text-xs cursor-help"
-                  onMouseEnter={() => setShowTooltip(true)}
-                  onMouseLeave={() => setShowTooltip(false)}
-                  aria-label="Aura analysis explanation"
-                >
-                  ?
-                </span>
-                {showTooltip && auraReason && (
-                  <div className="absolute bottom-8 left-0 w-72 p-3 bg-white border border-gray-200 rounded-md shadow-lg z-10 text-left">
-                    <div className="text-sm text-gray-700">{auraReason}</div>
-                    <div className="absolute bottom-[-6px] left-2 w-3 h-3 bg-white border-r border-b border-gray-200 transform rotate-45"></div>
-                  </div>
-                )}
-              </div>
             </div>
+
+            {/* Aura reason - now displayed below the score instead of in tooltip */}
+            {auraReason && (
+              <div className="text-left">
+                <h3 className="text-sm font-bold text-gray-500 my-2 text-left">Aura Reason :</h3>
+                <p className="text-gray-600 text-sm italic">{auraReason}</p>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { satoshi } from '@/fonts/satoshi';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -12,11 +13,13 @@ export default function Home() {
   useEffect(() => {
     // Short delay to show the welcome screen before redirecting
     const redirectTimer = setTimeout(() => {
-      router.replace('/explore');
-    }, 3000); // Increased to 3 seconds to allow animations to complete
+      router.push('/explore'); // Using push instead of replace
+    }, 3000);
     
-    return () => clearTimeout(redirectTimer);
-  }, [router]);
+    return () => {
+      clearTimeout(redirectTimer);
+    };
+  }, [router]); // Only depend on router when needed
   
   return (
     <div className={`${satoshi.className} page-container bg-gradient-to-br from-white to-blue-50 min-h-screen flex flex-col items-center justify-center p-4`}>
@@ -38,9 +41,15 @@ export default function Home() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="w-25 h-25 rounded-full border-2 border-purple-200 bg-white flex items-center justify-center relative overflow-hidden shadow-lg mb-10 p-2"
+        className="w-28 h-28 rounded-full border-2 border-purple-200 bg-white flex items-center justify-center relative overflow-hidden shadow-lg mb-10 p-3"
       >
-        <span className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">Auraah</span>
+        <Image 
+          src="/logo.png" 
+          alt="Auraah Logo" 
+          width={80} 
+          height={80}
+          priority
+        />
       </motion.div>
       
       <motion.div
