@@ -124,30 +124,33 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         {/* Aura Score - styled to match reference image */}
         {auraScore !== null && (
           <div className="mb-6">
-            <h3 className="text-sm font-bold text-gray-500 mb-2 text-left">Aura Score :</h3>
-            <div className="flex items-center justify-start mb-6">
-              {/* Gradient border wrapper */}
-              <div
-                className="p-[1px] rounded-full"
+            <h3 className="text-sm font-bold text-gray-500 mb-2 text-left">Aura Score:</h3>
+
+            {/* Score with reason in green background box */}
+            <div className="bg-[#F2FEF3] rounded-lg p-4 relative overflow-hidden">
+              {/* Left border gradient */}
+              <div className="absolute left-0 top-0 h-full w-[2px]"
                 style={{
-                  background: 'linear-gradient(88.77deg, #9AEB9B 0%, #71D8E9 33%, #A6AEFF 66%, #FE9399 100%)',
-                }}
-              >
-                {/* Inner white content with full radius */}
-                <div className="flex items-center px-4 py-2 rounded-full bg-white">
-                  <BsStars className="mr-2 text-gray-800 text-lg" />
-                  <span className="font-bold text-gray-800 text-lg">{auraScore}</span>
+                  background: 'linear-gradient(180deg, #9AEB9B 0%, #71D8E9 32.13%, #A6AEFF 64.26%, #FE9399 97.37%)'
+                }}>
+              </div>
+
+              {/* Score display and reason in flex layout */}
+              <div className="flex items-center">
+                {/* Score section */}
+                <div className="flex items-center mr-4">
+                  <BsStars className="mr-2 text-gray-800 text-xl" />
+                  <span className="font-bold text-gray-800 text-3xl">{auraScore}</span>
                 </div>
+
+                {/* Aura reason */}
+                {auraReason && (
+                  <p className="text-gray-600 text-sm leading-relaxed flex-1 text-left">
+                    {auraReason}
+                  </p>
+                )}
               </div>
             </div>
-
-            {/* Aura reason - now displayed below the score instead of in tooltip */}
-            {auraReason && (
-              <div className="text-left">
-                <h3 className="text-sm font-bold text-gray-500 my-2 text-left">Aura Reason :</h3>
-                <p className="text-gray-600 text-sm italic">{auraReason}</p>
-              </div>
-            )}
           </div>
         )}
       </div>
