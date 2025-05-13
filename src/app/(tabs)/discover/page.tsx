@@ -19,13 +19,13 @@ export default function DiscoverPage() {
   const trendingTags: Tag[] = [...allTags].sort(() => Math.random() - 0.5).slice(0, 5);
 
   return (
-    <div className="page-container bg-white min-h-screen">
+    <div className="page-container bg-white min-h-screen overflow-y-auto pb-4 pt-24">
 
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mt-10 mb-20"
+        className="text-center my-20"
       >
         <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
           Discover people, places,

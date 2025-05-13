@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { getTagById, Tag } from '@/lib/data';
 import AuraDisplay from '@/components/discover/AuraDisplay';
 import SimilarTagsRow from '@/components/discover/SimilarTagsRow';
+import SearchBox from '@/components/discover/SearchBox';
 import { motion } from "framer-motion";
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -81,41 +82,33 @@ function TagContent() {
 
   if (!tagId || !currentTag) {
     return (
-      <div className="page-container flex flex-col items-center justify-center min-h-full bg-gray-50 p-4">
-        <h1 className="text-2xl mb-4 text-gray-700">Aura not found</h1>
-        <Link href="/discover" className="text-purple-600 hover:text-purple-800 flex items-center transition-colors">
-          <ArrowLeft size={20} className="mr-1" />
-          Back to Discover
-        </Link>
+      <div className="flex flex-col items-center justify-center h-full p-4">
+        <div className="w-full max-w-3xl mx-auto">
+          <SearchBox />
+          <div className="mt-12 text-center">
+            <h1 className="text-2xl mb-4 text-gray-700">Aura not found</h1>
+            <Link href="/discover" className="text-purple-600 hover:text-purple-800 flex items-center justify-center transition-colors">
+              <ArrowLeft size={20} className="mr-1" />
+              Back to Discover
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className={`${satoshi.className} page-container bg-gray-50 min-h-screen p-4 md:p-6`}>
-      <div className="my-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-5">
-          Showing results for &quot;{currentTag.name}&quot;
-        </h1>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="text-gray-600 mr-2">Categories:</span>
-            <select className="border border-gray-300 rounded-md py-1 px-3 bg-white text-gray-700">
-              <option>All</option>
-            </select>
-          </div>
-          <div className="flex items-center justify-center w-10 h-10 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
 
-      <div className="animate-[var(--animate-fade-in)] max-w-3xl mx-auto">
+  return (
+    <div className={`${satoshi.className} bg-gray-50 p-4 md:p-6`}>
+      {/* SearchBox in its own container */}
+      <div className="w-full max-w-3xl mx-auto mb-8">
+        <SearchBox />
+      </div>
+      
+      {/* Content with proper spacing from SearchBox */}
+      <div className="animate-[var(--animate-fade-in)] max-w-3xl mx-auto mt-8">
         {loading ? (
-          <div className="flex flex-col items-center justify-center min-h-[50vh]">
+          <div className="flex flex-col items-center justify-center min-h-[40vh]">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -153,7 +146,7 @@ function TagContent() {
             <p className="text-gray-600">Generating aura for &quot;{currentTag.name}&quot;...</p>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-4 bg-white rounded-lg shadow">
+          <div className="flex flex-col items-center justify-center min-h-[40vh] text-center p-4 bg-white rounded-lg shadow">
             <p className="text-red-600 mb-2 text-lg">{error}</p>
           </div>
         ) : aiData ? (
@@ -188,9 +181,14 @@ function TagContent() {
 // Loading fallback component
 function TagPageLoading() {
   return (
-    <div className="page-container flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-      <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin"></div>
-      <p className="mt-4 text-gray-600">Loading tag details...</p>
+    <div className="flex flex-col items-center p-4">
+      <div className="w-full max-w-3xl mx-auto mb-8">
+        <SearchBox />
+      </div>
+      <div className="flex flex-col items-center justify-center min-h-[40vh] mt-8">
+        <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600">Loading tag details...</p>
+      </div>
     </div>
   );
 }

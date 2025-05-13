@@ -7,7 +7,9 @@ import {
   BookOpen,
   MapPin,
   BadgeCent,
-  Package
+  Package,
+  X,
+  Heart
 } from 'lucide-react';
 import { BsStars } from 'react-icons/bs';
 import { satoshi } from '@/fonts/satoshi';
@@ -35,6 +37,8 @@ const getTypeIcon = (type: string) => typeIconMap[type] ?? <Package size={20} cl
 export default function AuraDisplay({ aura, auraScore: providedScore, auraReason }: AuraDisplayProps) {
   const [auraScore, setAuraScore] = useState<number | null>(null);
   const [imageError, setImageError] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
   useEffect(() => {
     if (providedScore !== undefined) {
@@ -42,12 +46,93 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
     } else {
       setAuraScore(Math.floor(Math.random() * 50) + 50);
     }
+
+    // Check localStorage for liked/disliked status
+    if (aura?.name) {
+      const likedAuras = JSON.parse(localStorage.getItem('likedAuras') || '[]');
+      const dislikedAuras = JSON.parse(localStorage.getItem('dislikedAuras') || '[]');
+
+      setIsLiked(likedAuras.includes(aura.name));
+      setIsDisliked(dislikedAuras.includes(aura.name));
+    }
   }, [aura?.name, providedScore]);
 
   // Display the type label with proper capitalization
   const getTypeDisplay = (type: string) => {
     if (!type) return 'Thing';
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  };
+
+  const handleLike = () => {
+    if (!aura?.name) return;
+
+    // Get current arrays from localStorage
+    const likedAuras = JSON.parse(localStorage.getItem('likedAuras') || '[]');
+    const dislikedAuras = JSON.parse(localStorage.getItem('dislikedAuras') || '[]');
+
+    if (isLiked) {
+      // Remove from likes if already liked
+      const index = likedAuras.indexOf(aura.name);
+      if (index > -1) {
+        likedAuras.splice(index, 1);
+      }
+      setIsLiked(false);
+    } else {
+      // Add to likes
+      likedAuras.push(aura.name);
+      setIsLiked(true);
+
+      // Remove from dislikes if present
+      if (isDisliked) {
+        const index = dislikedAuras.indexOf(aura.name);
+        if (index > -1) {
+          dislikedAuras.splice(index, 1);
+        }
+        setIsDisliked(false);
+      }
+    }
+
+    // Save updated arrays
+    localStorage.setItem('likedAuras', JSON.stringify(likedAuras));
+    localStorage.setItem('dislikedAuras', JSON.stringify(dislikedAuras));
+
+    console.log("Liked Auras:", likedAuras);
+  };
+
+  const handleDislike = () => {
+    if (!aura?.name) return;
+
+    // Get current arrays from localStorage
+    const likedAuras = JSON.parse(localStorage.getItem('likedAuras') || '[]');
+    const dislikedAuras = JSON.parse(localStorage.getItem('dislikedAuras') || '[]');
+
+    if (isDisliked) {
+      // Remove from dislikes if already disliked
+      const index = dislikedAuras.indexOf(aura.name);
+      if (index > -1) {
+        dislikedAuras.splice(index, 1);
+      }
+      setIsDisliked(false);
+    } else {
+      // Add to dislikes
+      dislikedAuras.push(aura.name);
+      setIsDisliked(true);
+
+      // Remove from likes if present
+      if (isLiked) {
+        const index = likedAuras.indexOf(aura.name);
+        if (index > -1) {
+          likedAuras.splice(index, 1);
+        }
+        setIsLiked(false);
+      }
+    }
+
+    // Save updated arrays
+    localStorage.setItem('likedAuras', JSON.stringify(likedAuras));
+    localStorage.setItem('dislikedAuras', JSON.stringify(dislikedAuras));
+
+    console.log("Disliked Auras:", dislikedAuras);
   };
 
   if (!aura) {
@@ -59,21 +144,60 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`${satoshi.className} flex flex-col p-6 rounded-lg bg-white`}
+      className={`${satoshi.className} flex flex-col p-6 rounded-lg bg-white relative`}
       style={{
         boxShadow:
           '-2px -2px 16px 0px #95EE933D, 0px 2px 12px 0px #E99DF766, 0px 8px 16px 0px #89D6E83D'
       }}
     >
-      {/* Type indicator */}
-      <div className="self-start mb-4">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-gray-700 text-sm font-bold border border-[#A193F2]">
-          {getTypeIcon(aura.type)}
-          {getTypeDisplay(aura.type)}
-        </span>
+      {/* Header section with type indicator and action buttons */}
+      <div className="flex justify-between items-start mb-4">
+        {/* Type indicator */}
+        <div className="self-start">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-gray-700 text-sm font-bold border border-[#A193F2]">
+            {getTypeIcon(aura.type)}
+            {getTypeDisplay(aura.type)}
+          </span>
+        </div>
+
+        {/* Like/dislike buttons */}
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={handleDislike}
+            className={`rounded-full w-10 h-10 flex items-center justify-center shadow-sm 
+      transition-all duration-200
+      ${isDisliked
+                ? 'bg-red-50 ring-2 ring-red-300 transform scale-110'
+                : 'bg-white hover:bg-gray-50'}`}
+            aria-label="Dislike"
+          >
+            <X
+              size={20}
+              className={isDisliked
+                ? "text-red-500 font-bold"
+                : "text-red-500"}
+            />
+          </button>
+          <button
+            onClick={handleLike}
+            className={`rounded-full w-10 h-10 flex items-center justify-center shadow-sm 
+      transition-all duration-200
+      ${isLiked
+                ? 'bg-green-50 ring-2 ring-green-300 transform scale-110'
+                : 'bg-white hover:bg-gray-50'}`}
+            aria-label="Like"
+          >
+            <Heart
+              size={20}
+              className={isLiked
+                ? "text-green-500 fill-green-500"
+                : "text-green-500"}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Aura circle */}
+      {/* Rest of the component remains the same */}
       <motion.div
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
@@ -101,17 +225,14 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         </div>
       </motion.div>
 
-      {/* Name and details - exact match to reference image */}
       <div className="text-center mt-6">
         <h2 className="text-3xl font-bold text-gray-800 mb-3">{aura?.name}</h2>
         <div className="w-60 h-1 bg-purple-300 mx-auto rounded-full mb-6"></div>
 
-        {/* General description from API */}
         <p className="text-gray-600 text-base mb-6 text-left">
           {aura?.info}
         </p>
 
-        {/* Claim to fame section - styled exactly as in reference */}
         {aura?.claimToFame && (
           <div className="mb-6">
             <h3 className="text-sm font-bold text-gray-500 text-left">Claim to fame</h3>
@@ -121,29 +242,23 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
           </div>
         )}
 
-        {/* Aura Score - styled to match reference image */}
         {auraScore !== null && (
           <div className="mb-6">
             <h3 className="text-sm font-bold text-gray-500 mb-2 text-left">Aura Score:</h3>
 
-            {/* Score with reason in green background box */}
             <div className="bg-[#F2FEF3] rounded-lg p-4 relative overflow-hidden">
-              {/* Left border gradient */}
               <div className="absolute left-0 top-0 h-full w-[2px]"
                 style={{
                   background: 'linear-gradient(180deg, #9AEB9B 0%, #71D8E9 32.13%, #A6AEFF 64.26%, #FE9399 97.37%)'
                 }}>
               </div>
 
-              {/* Score display and reason in flex layout */}
               <div className="flex items-center">
-                {/* Score section */}
                 <div className="flex items-center mr-4">
                   <BsStars className="mr-2 text-gray-800 text-xl" />
                   <span className="font-bold text-gray-800 text-3xl">{auraScore}</span>
                 </div>
 
-                {/* Aura reason */}
                 {auraReason && (
                   <p className="text-gray-600 text-sm leading-relaxed flex-1 text-left">
                     {auraReason}
