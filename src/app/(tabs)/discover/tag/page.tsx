@@ -34,7 +34,7 @@ function TagContent() {
       async function fetchAuraData() {
         try {
           setLoading(true);
-          const response = await fetch('/api/groq', {
+          const response = await fetch('/api/generate-aura', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

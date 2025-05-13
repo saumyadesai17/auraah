@@ -162,39 +162,51 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
 
         {/* Like/dislike buttons */}
         <div className="flex flex-col gap-4">
-          <button
-            onClick={handleDislike}
-            className={`rounded-full w-10 h-10 flex items-center justify-center shadow-sm 
-      transition-all duration-200
-      ${isDisliked
-                ? 'bg-red-50 ring-2 ring-red-300 transform scale-110'
-                : 'bg-white hover:bg-gray-50'}`}
-            aria-label="Dislike"
-          >
-            <X
-              size={20}
-              className={isDisliked
-                ? "text-red-500 font-bold"
-                : "text-red-500"}
-            />
-          </button>
-          <button
-            onClick={handleLike}
-            className={`rounded-full w-10 h-10 flex items-center justify-center shadow-sm 
-      transition-all duration-200
-      ${isLiked
-                ? 'bg-green-50 ring-2 ring-green-300 transform scale-110'
-                : 'bg-white hover:bg-gray-50'}`}
-            aria-label="Like"
-          >
-            <Heart
-              size={20}
-              className={isLiked
-                ? "text-green-500 fill-green-500"
-                : "text-green-500"}
-            />
-          </button>
-        </div>
+  <button
+    onClick={handleDislike}
+    className={`rounded-full w-10 h-10 flex items-center justify-center
+    transition-all duration-200
+    ${isDisliked
+      ? 'bg-red-100 ring-2 ring-red-400 transform scale-110'
+      : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
+    style={{
+      boxShadow: isDisliked 
+        ? '0 0 0 2px rgba(248, 113, 113, 0.4), 0 0 8px rgba(248, 113, 113, 0.4)' 
+        : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
+    }}
+    aria-label="Dislike"
+  >
+    <X
+      size={20}
+      className={isDisliked
+        ? "text-red-500 font-bold"
+        : "text-red-500"}
+      strokeWidth={isDisliked ? 2.5 : 2}
+    />
+  </button>
+  <button
+    onClick={handleLike}
+    className={`rounded-full w-10 h-10 flex items-center justify-center
+    transition-all duration-200
+    ${isLiked
+      ? 'bg-green-100 ring-2 ring-green-400 transform scale-110'
+      : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
+    style={{
+      boxShadow: isLiked 
+        ? '0 0 0 2px rgba(74, 222, 128, 0.4), 0 0 8px rgba(74, 222, 128, 0.4)' 
+        : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
+    }}
+    aria-label="Like"
+  >
+    <Heart
+      size={20}
+      className={isLiked
+        ? "text-green-500 fill-green-500"
+        : "text-green-500"}
+      strokeWidth={isLiked ? 2.5 : 2}
+    />
+  </button>
+</div>
       </div>
 
       {/* Rest of the component remains the same */}
