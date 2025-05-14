@@ -1,7 +1,6 @@
 //src/components/explore/AuraCard.tsx
 
 import { Aura } from '@/lib/data';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useEffect, JSX } from 'react';
 import {
@@ -10,8 +9,6 @@ import {
   MapPin,
   BadgeCent,
   Package,
-  X,
-  Heart
 } from 'lucide-react';
 import { BsStars } from 'react-icons/bs';
 import { satoshi } from '@/fonts/satoshi';
