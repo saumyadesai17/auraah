@@ -51,9 +51,6 @@ export default function AuraCard({
 }: AuraDisplayProps) {
   const [auraScore, setAuraScore] = useState<number | null>(null);
   const [imageError, setImageError] = useState(false);
-  const [dislikeActive, setDislikeActive] = useState(false);
-  const [shuffleActive, setShuffleActive] = useState(false);
-  const [likeActive, setLikeActive] = useState(false);
 
   useEffect(() => {
     if (providedScore !== undefined) {
@@ -65,25 +62,16 @@ export default function AuraCard({
 
   const handleDislike = () => {
     if (isExiting || !onSwipe) return;
-
-    setDislikeActive(true);
-    setTimeout(() => setDislikeActive(false), 300);
     onSwipe('left');
   };
 
   const handleShuffle = () => {
     if (isExiting || !onReset) return;
-
-    setShuffleActive(true);
-    setTimeout(() => setShuffleActive(false), 300);
     onReset();
   };
 
   const handleLike = () => {
     if (isExiting || !onSwipe) return;
-
-    setLikeActive(true);
-    setTimeout(() => setLikeActive(false), 300);
     onSwipe('right');
   };
 
@@ -103,19 +91,22 @@ export default function AuraCard({
         boxShadow: `-2px -2px 8px 0px #95EE932B, 0px 2px 8px 0px #E99DF726, 0px 8px 10px 0px #89D6E81A`
       }}>
       {/* Single scrollable container with sticky footer */}
-      <div className="h-full overflow-y-auto overscroll-contain scrollbar-hide"
+      <div
+        className="h-full overflow-y-auto overscroll-contain scrollbar-hide"
         style={{
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
-          msOverflowStyle: "none"
-        }}>
+          msOverflowStyle: "none",
+          touchAction: "pan-y" // Allow vertical scrolling but not horizontal
+        }}
+      >
         {/* Content wrapper */}
         <div className="px-6 pt-6 pb-1 min-h-full flex flex-col">
           {/* Card header with type indicator and counter */}
           <div className="flex justify-between items-center mb-5">
             {/* Type indicator in a pill */}
             <div className="self-start">
-              <span className="inline-flex items-center px-4 py-2 rounded-full text-gray-700 text-sm font-medium border border-[#A193F2] bg-white">
+              <span className="inline-flex items-center px-2 py-2 rounded-full text-gray-700 text-sm font-medium border border-[#A193F2] bg-white">
                 {getTypeIcon(aura.type)}
                 {getTypeDisplay(aura.type)}
               </span>
@@ -124,32 +115,36 @@ export default function AuraCard({
           </div>
 
           {/* Image section - Responsive circular image */}
-          <div className="flex justify-center mb-6">
-            <div className="w-48 h-48 md:w-60 md:h-60 rounded-full overflow-hidden relative bg-gray-100">
-              {aura?.imageUrl && !imageError ? (
-                <Image
-                  src={aura.imageUrl}
-                  alt={aura.name}
-                  fill
-                  className="object-cover"
-                  onError={() => setImageError(true)}
-                  sizes="(max-width: 768px) 192px, 240px"
-                  unoptimized
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-2xl md:text-3xl font-semibold text-gray-400">
-                    {aura?.name}
-                  </span>
-                </div>
-              )}
+          <div className="flex justify-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden relative bg-gray-100">
+                {aura?.imageUrl && !imageError ? (
+                  <Image
+                    src={aura.imageUrl}
+                    alt={aura.name}
+                    fill
+                    className="object-cover"
+                    onError={() => setImageError(true)}
+                    sizes="(max-width: 768px) 160px, 208px"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-2xl md:text-3xl font-semibold text-gray-400">
+                      {aura?.name}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Title and gradient line */}
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-zinc-800 mb-3">{aura?.name}</h2>
-            <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-blue-300 mx-auto rounded-full"></div>
+            <div className="w-40 h-1 mx-auto rounded-full" style={{
+              background: 'linear-gradient(270deg, #8CDCE9 0%, #AD9FFC 100%)'
+            }}></div>
           </div>
 
           {/* Description text */}
@@ -202,12 +197,10 @@ export default function AuraCard({
         </div>
 
         {/* Sticky action buttons - inside the scrollable area but sticky to bottom */}
-        <div className="sticky bottom-0 left-0 right-0 flex justify-center items-center gap-4 py-4 bg-white border-t border-gray-100 rounded-b-2xl z-10">
+        <div className="sticky bottom-0 left-0 right-0 flex justify-center items-center gap-4 py-2 bg-white border-t border-gray-100 rounded-b-2xl z-10">
           <button
             onClick={handleDislike}
-            className={`p-3 md:p-4 bg-white rounded-full text-red-400 hover:bg-red-50 
-      active:scale-90 ${dislikeActive ? 'bg-red-200 scale-90' : ''} 
-      transition-all duration-150 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400`}
+            className="p-3 md:p-4 bg-white rounded-full text-red-400 hover:bg-red-50 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 active:bg-red-100 active:scale-90 active:text-red-600 transition-all duration-150 shadow-sm"
             aria-label="Dislike"
             disabled={isExiting}
           >
@@ -216,9 +209,7 @@ export default function AuraCard({
 
           <button
             onClick={handleShuffle}
-            className={`p-2.5 md:p-3 bg-white rounded-full text-gray-500 hover:bg-gray-50 
-      active:scale-90 ${shuffleActive ? 'bg-gray-200 scale-90' : ''} 
-      transition-all duration-150 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400`}
+            className="p-2.5 md:p-3 bg-white rounded-full text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 active:bg-gray-100 active:scale-90 active:text-gray-800 transition-all duration-150 shadow-sm"
             aria-label="Shuffle cards"
             disabled={isExiting}
           >
@@ -227,9 +218,7 @@ export default function AuraCard({
 
           <button
             onClick={handleLike}
-            className={`p-3 md:p-4 bg-white rounded-full text-green-500 hover:bg-green-50 
-      active:scale-90 ${likeActive ? 'bg-green-200 scale-90' : ''} 
-      transition-all duration-150 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400`}
+            className="p-3 md:p-4 bg-white rounded-full text-green-500 hover:bg-green-50 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 active:bg-green-100 active:scale-90 active:text-green-700 transition-all duration-150 shadow-sm"
             aria-label="Like"
             disabled={isExiting}
           >

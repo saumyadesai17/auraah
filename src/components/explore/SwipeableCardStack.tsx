@@ -66,6 +66,8 @@ export default function SwipeableCardStack() {
   const [cards, setCards] = useState(() => shuffleArray(mockAuras));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exiting, setExiting] = useState(false);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const startY = useRef<number | null>(null);
 
   // For enriched aura data - fixed type
   const [enrichedAuras, setEnrichedAuras] = useState<Record<string, EnrichedAuraData>>({});
@@ -76,17 +78,17 @@ export default function SwipeableCardStack() {
   // Track when we need to reset after all cards are seen
   const [needsReset, setNeedsReset] = useState(false);
 
-  // Track swipe direction for animation
-  const controls = useAnimation();
+  // Simple motion values for card position and rotation
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const rotate = useTransform(x, [-200, 0, 200], [-5, 0, 5]);
 
-  // Rotate card slightly as it moves
-  const rotate = useTransform(x, [-300, 0, 300], [-30, 0, 30]);
+  // Show indicators with less movement required
+  const likeOpacity = useTransform(x, [20, 80], [0, 1]);  // Start showing at just 20px
+  const dislikeOpacity = useTransform(x, [-80, -20], [1, 0]);  // Start showing at just -20px
 
-  // Calculate opacity of like/dislike indicators
-  const likeOpacity = useTransform(x, [0, 125], [0, 1]);
-  const dislikeOpacity = useTransform(x, [-125, 0], [1, 0]);
+  // Animation controls
+  const controls = useAnimation();
 
   // Process aura data in batches from the mock responses
   useEffect(() => {
@@ -173,69 +175,108 @@ export default function SwipeableCardStack() {
     controls.set({ x: 0, y: 0, opacity: 1 });
   };
 
-  // Handle the start of a drag
-  const handleDragStart = () => {
-    // No need to track drag start position
+  // Add drag start handler to detect vertical scrolling vs horizontal swiping
+  const handleDragStart = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    setExiting(false);
+
+    // Track start position for vertical detection
+    if ('touches' in event) {
+      startY.current = event.touches[0].clientY;
+    } else if ('clientY' in event) {
+      startY.current = event.clientY;
+    }
+
+    setIsSwiping(false);
   };
 
-  // Handle the end of a drag/swipe
-  const handleDragEnd = (_event: unknown, info: PanInfo) => {
-  if (exiting) return;
+  // SIMPLIFIED SWIPING LOGIC
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    // Don't process if already exiting
+    if (exiting) return;
 
-  // Check for horizontal swipe first
-  const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y);
-  const threshold = 100; // minimum distance required for a swipe
-  const velocity = 0.3; // minimum velocity for a swipe
+    // Get absolute distance and velocity
+    const distance = Math.abs(info.offset.x);
+    const velocity = Math.abs(info.velocity.x);
 
-  if (isHorizontalSwipe && (Math.abs(info.velocity.x) > velocity || Math.abs(info.offset.x) > threshold)) {
-    // Horizontal swipe detected
-    if (info.offset.x > 0) {
-      // Swipe right (like)
-      handleSwipeAnimation('right');
+    // Swipe threshold (based on screen size for responsiveness)
+    const THRESHOLD = window.innerWidth * 0.40; // 40% of screen width
+
+    // Check if swipe should succeed:
+    // - Either distance is significant
+    // - Or velocity is high enough (even with less distance)
+    const shouldSwipe =
+      distance > THRESHOLD ||
+      (distance > THRESHOLD / 2 && velocity > 0.7);
+
+    if (shouldSwipe) {
+      // Determine direction and trigger animation
+      const direction = info.offset.x > 0 ? 'right' : 'left';
+
+      // Set exiting flag
+      setExiting(true);
+
+      // Animate card exit
+      controls.start({
+        x: direction === 'left' ? -window.innerWidth : window.innerWidth,
+        y: 30,
+        rotate: direction === 'left' ? -20 : 20,
+        opacity: 0,
+        transition: {
+          duration: 0.5,
+          ease: [0.2, 0.1, 0.3, 1]
+        }
+      }).then(() => {
+        // After animation completes
+        setCurrentIndex(i => i + 1);
+        setExiting(false);
+
+        // Reset position
+        x.set(0);
+        y.set(0);
+        controls.set({ x: 0, y: 0, rotate: 0, opacity: 1 });
+      });
     } else {
-      // Swipe left (dislike)
-      handleSwipeAnimation('left');
+      // Return to center with spring animation
+      controls.start({
+        x: 0,
+        y: 0,
+        rotate: 0,
+        transition: {
+          type: 'spring',
+          stiffness: 200,
+          damping: 25,
+          duration: 0.4,
+        }
+      });
     }
-  } else {
-    // Return to center if not swiped far enough
-    controls.start({
-      x: 0,
-      y: 0,
-      transition: { type: 'spring', stiffness: 500, damping: 30 }
-    });
-  }
-};
+  };
 
-  // Common animation logic for swiping
-  const handleSwipeAnimation = (dir: 'left' | 'right') => {
+  // Handle button swipes
+  const handleSwipe = (direction: 'left' | 'right') => {
     if (exiting) return;
 
     setExiting(true);
 
     controls.start({
-      x: dir === 'left' ? -500 : 500,
+      x: direction === 'left' ? -window.innerWidth : window.innerWidth,
+      y: 30,
+      rotate: direction === 'left' ? -20 : 20,
       opacity: 0,
-      transition: { duration: 0.3 }
+      transition: {
+        duration: 0.5,
+        ease: [0.2, 0.1, 0.3, 1]
+      }
     }).then(() => {
-      // After animation completes
-      setCurrentIndex(prevIndex => prevIndex + 1);
+      setCurrentIndex(i => i + 1);
       setExiting(false);
-
-      // Reset position for next card
       x.set(0);
       y.set(0);
-      controls.set({ x: 0, y: 0, opacity: 1 });
+      controls.set({ x: 0, y: 0, rotate: 0, opacity: 1 });
     });
-  };
-
-  // Trigger swipe in a given direction programmatically (from buttons)
-  const handleSwipe = (dir: 'left' | 'right') => {
-    handleSwipeAnimation(dir);
   };
 
   // Prevent drag when clicking buttons
   const checkDragTarget = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Don't initiate drag if clicking on a button
     const target = e.target as HTMLElement;
     if (target.tagName === 'BUTTON' || target.closest('button')) {
       e.stopPropagation();
@@ -273,9 +314,7 @@ export default function SwipeableCardStack() {
   // Main UI
   return (
     <div className="w-full h-full mx-auto flex flex-col">
-      {/* Card container - match exactly to parent container height */}
       <div className="relative w-full h-full overflow-hidden">
-        {/* Swipeable card using framer-motion */}
         <motion.div
           key={currentIndex}
           ref={cardRef}
@@ -285,31 +324,68 @@ export default function SwipeableCardStack() {
           initial={{ x: 0, y: 0, opacity: 1 }}
           drag={!exiting}
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-          dragElastic={0.8}
+          dragElastic={0.6}
           onDragStart={handleDragStart}
+          onDrag={(event, info) => {
+            // If we detect significant horizontal movement (and minimal vertical movement),
+            // set isSwiping to true - using a lower threshold for better responsiveness
+            if (!isSwiping && Math.abs(info.offset.x) > 30) {
+              if (startY.current !== null) {
+                const verticalMovement = ('touches' in event)
+                  ? Math.abs(event.touches[0].clientY - startY.current)
+                  : ('clientY' in event)
+                    ? Math.abs(event.clientY - startY.current)
+                    : 0;
+
+                // More lenient check for horizontal swiping
+                if (Math.abs(info.offset.x) > verticalMovement * 1.5) {
+                  setIsSwiping(true);
+                }
+              }
+            }
+
+            // Only update position if we're swiping, otherwise reset
+            if (!isSwiping && Math.abs(info.offset.x) > 5) {
+              controls.set({ x: 0 });
+            }
+          }}
           onDragEnd={handleDragEnd}
           onPointerDown={checkDragTarget}
           whileTap={{ cursor: "grabbing" }}
-          dragDirectionLock
-          dragMomentum={false}
+          dragMomentum={true}
         >
-          {/* Like indicator */}
+          {/* Enhanced Like indicator - more visible and responsive */}
           <motion.div
-            className="absolute top-10 right-10 z-20 rotate-12 border-4 border-primary rounded-lg px-2 py-1"
-            style={{ opacity: likeOpacity }}
+            className="absolute top-10 left-6 z-30"
+            style={{
+              opacity: likeOpacity,
+              scale: useTransform(x, [40, 100], [0.9, 1.2])
+            }}
           >
-            <span className="text-primary font-bold text-xl">LIKE</span>
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-50 border-2 border-green-400 shadow-lg">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  fill="#22C55E" />
+              </svg>
+            </div>
           </motion.div>
 
-          {/* Dislike indicator */}
+          {/* Dislike indicator - positioned on the RIGHT side */}
           <motion.div
-            className="absolute top-10 left-10 z-20 -rotate-12 border-4 border-destructive rounded-lg px-2 py-1"
-            style={{ opacity: dislikeOpacity }}
+            className="absolute top-10 right-6 z-30"
+            style={{
+              opacity: dislikeOpacity,
+              scale: useTransform(x, [-100, -40], [1.2, 0.9])
+            }}
           >
-            <span className="text-destructive font-bold text-xl">NOPE</span>
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-50 border-2 border-red-400 shadow-lg">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6l12 12" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
           </motion.div>
 
-          {/* Card content - No border or shadow here */}
+          {/* Card content */}
           <div className="h-full w-full rounded-2xl overflow-hidden">
             {!enrichedData ? (
               <div className="h-full flex flex-col items-center justify-center p-6 bg-white rounded-2xl">

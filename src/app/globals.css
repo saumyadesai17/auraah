@@ -229,3 +229,16 @@ body {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
+
+button, 
+[role="button"] {
+  -webkit-tap-highlight-color: transparent; /* Remove default mobile tap highlight */
+  touch-action: manipulation; /* Better touch behavior */
+}
+
+@media (hover: none) {
+  /* Custom tap highlight styles for touch devices */
+  .touch-feedback:active {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
