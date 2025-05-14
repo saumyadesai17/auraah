@@ -161,11 +161,11 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
             className={`rounded-full w-10 h-10 flex items-center justify-center
             transition-all duration-200
             ${isDisliked
-              ? 'bg-red-100 ring-2 ring-red-400 transform scale-110'
-              : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
+                ? 'bg-red-100 ring-2 ring-red-400 transform scale-110'
+                : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
             style={{
-              boxShadow: isDisliked 
-                ? '0 0 0 2px rgba(248, 113, 113, 0.4), 0 0 8px rgba(248, 113, 113, 0.4)' 
+              boxShadow: isDisliked
+                ? '0 0 0 2px rgba(248, 113, 113, 0.4), 0 0 8px rgba(248, 113, 113, 0.4)'
                 : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
             }}
             aria-label="Dislike"
@@ -183,11 +183,11 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
             className={`rounded-full w-10 h-10 flex items-center justify-center
             transition-all duration-200
             ${isLiked
-              ? 'bg-green-100 ring-2 ring-green-400 transform scale-110'
-              : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
+                ? 'bg-green-100 ring-2 ring-green-400 transform scale-110'
+                : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
             style={{
-              boxShadow: isLiked 
-                ? '0 0 0 2px rgba(74, 222, 128, 0.4), 0 0 8px rgba(74, 222, 128, 0.4)' 
+              boxShadow: isLiked
+                ? '0 0 0 2px rgba(74, 222, 128, 0.4), 0 0 8px rgba(74, 222, 128, 0.4)'
                 : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
             }}
             aria-label="Like"
@@ -210,23 +210,25 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         transition={{ duration: 0.6, type: "spring" }}
         className="flex justify-center mb-8"
       >
-        <div className="w-60 h-60 rounded-full border-2 border-blue-100 bg-white flex items-center justify-center relative overflow-hidden">
+        <div className="w-60 h-60 rounded-full overflow-hidden relative bg-gray-100">
           {aura?.imageUrl && !imageError ? (
-            <div className="w-52 h-52 relative rounded-full overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center">
               <Image
                 src={aura.imageUrl}
                 alt={aura.name}
-                fill
-                className="object-contain"
+                width={240}
+                height={240}
+                className="min-w-full min-h-full object-cover"
                 onError={() => setImageError(true)}
-                sizes="(max-width: 768px) 100vw, 240px"
                 unoptimized
               />
             </div>
           ) : (
-            <span className="text-3xl font-semibold text-blue-500 text-center px-2">
-              {aura?.name}
-            </span>
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="text-3xl font-semibold text-blue-500 text-center px-2">
+                {aura?.name}
+              </span>
+            </div>
           )}
         </div>
       </motion.div>

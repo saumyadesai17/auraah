@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, PanInfo, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { mockAuras } from '@/lib/data';
 import AuraCard from '@/components/explore/AuraCard';
-import { Heart, X, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { getAuraColor } from '@/lib/aura';
 // Import the mock aura responses
 import auraResponses from '@/lib/auraResponses.json';
@@ -180,38 +180,31 @@ export default function SwipeableCardStack() {
 
   // Handle the end of a drag/swipe
   const handleDragEnd = (_event: unknown, info: PanInfo) => {
-    if (exiting) return;
+  if (exiting) return;
 
-    // Check if it was primarily a vertical drag (for scrolling)
-    const isVerticalDrag = Math.abs(info.offset.y) > Math.abs(info.offset.x * 2);
+  // Check for horizontal swipe first
+  const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y);
+  const threshold = 100; // minimum distance required for a swipe
+  const velocity = 0.3; // minimum velocity for a swipe
 
-    if (isVerticalDrag) {
-      // If vertical drag, don't trigger swipe, just return to center
-      controls.start({
-        x: 0,
-        y: 0,
-        transition: { type: 'spring', stiffness: 500, damping: 30 }
-      });
-      return;
-    }
-
-    const threshold = 100; // minimum distance required for a swipe
-
-    if (info.offset.x > threshold) {
+  if (isHorizontalSwipe && (Math.abs(info.velocity.x) > velocity || Math.abs(info.offset.x) > threshold)) {
+    // Horizontal swipe detected
+    if (info.offset.x > 0) {
       // Swipe right (like)
       handleSwipeAnimation('right');
-    } else if (info.offset.x < -threshold) {
+    } else {
       // Swipe left (dislike)
       handleSwipeAnimation('left');
-    } else {
-      // Return to center if not swiped far enough
-      controls.start({
-        x: 0,
-        y: 0,
-        transition: { type: 'spring', stiffness: 500, damping: 30 }
-      });
     }
-  };
+  } else {
+    // Return to center if not swiped far enough
+    controls.start({
+      x: 0,
+      y: 0,
+      transition: { type: 'spring', stiffness: 500, damping: 30 }
+    });
+  }
+};
 
   // Common animation logic for swiping
   const handleSwipeAnimation = (dir: 'left' | 'right') => {
@@ -240,6 +233,15 @@ export default function SwipeableCardStack() {
     handleSwipeAnimation(dir);
   };
 
+  // Prevent drag when clicking buttons
+  const checkDragTarget = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Don't initiate drag if clicking on a button
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'BUTTON' || target.closest('button')) {
+      e.stopPropagation();
+    }
+  };
+
   // Reset UI
   if (needsReset) {
     return (
@@ -247,7 +249,7 @@ export default function SwipeableCardStack() {
         <p className="text-xl text-muted-foreground mb-6">You&apos;ve seen all available auras</p>
         <button
           onClick={handleReset}
-          className="flex items-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-full
+          className="flex items-center gap-2 py-3 bg-secondary text-secondary-foreground rounded-full
                    hover:bg-custom-purple-light transition-colors duration-300 shadow-[var(--shadow-primary)]"
         >
           <RefreshCw size={22} />
@@ -270,14 +272,9 @@ export default function SwipeableCardStack() {
 
   // Main UI
   return (
-    <div className="w-full max-w-xs sm:max-w-sm mx-auto flex flex-col">
-      {/* Card counter */}
-      <p className="text-center mb-4 text-sm text-muted-foreground">
-        {currentIndex + 1} of {cards.length}
-      </p>
-
-      {/* Card container - Make it auto height so content fits */}
-      <div className="relative w-full h-[60vh] overflow-hidden mb-5">
+    <div className="w-full h-full mx-auto flex flex-col">
+      {/* Card container - match exactly to parent container height */}
+      <div className="relative w-full h-full overflow-hidden">
         {/* Swipeable card using framer-motion */}
         <motion.div
           key={currentIndex}
@@ -291,8 +288,10 @@ export default function SwipeableCardStack() {
           dragElastic={0.8}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
-          // Allow vertical scrolling by adding these classes
+          onPointerDown={checkDragTarget}
           whileTap={{ cursor: "grabbing" }}
+          dragDirectionLock
+          dragMomentum={false}
         >
           {/* Like indicator */}
           <motion.div
@@ -310,63 +309,33 @@ export default function SwipeableCardStack() {
             <span className="text-destructive font-bold text-xl">NOPE</span>
           </motion.div>
 
-          {/* Card content - Use overflow auto for scrolling */}
-          <div className="h-full overflow-y-auto px-1 pb-4 rounded-2xl shadow-md"
-            style={{ touchAction: "pan-y" }}>
+          {/* Card content - No border or shadow here */}
+          <div className="h-full w-full rounded-2xl overflow-hidden">
             {!enrichedData ? (
-              <div className="h-full flex flex-col items-center justify-center p-6 bg-white rounded-lg">
+              <div className="h-full flex flex-col items-center justify-center p-6 bg-white rounded-2xl">
                 <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-600 rounded-full animate-spin"></div>
                 <p className="mt-4 text-gray-600">Loading aura information...</p>
               </div>
             ) : (
-              <div className="h-full bg-white rounded-2xl overflow-hidden">
-                <AuraCard
-                  aura={{
-                    ...currentCard,
-                    type: enrichedData.type || normalizeType(currentCard.type),
-                    auraColor: getAuraColor(enrichedData.type || normalizeType(currentCard.type)),
-                    info: enrichedData.description || currentCard.info,
-                    claimToFame: enrichedData.claimToFame,
-                    imageUrl: enrichedData.imageUrl || currentCard.imageUrl
-                  }}
-                  auraScore={enrichedData.auraMeter}
-                  auraReason={enrichedData.auraReason}
-                />
-              </div>
+              <AuraCard
+                aura={{
+                  ...currentCard,
+                  type: enrichedData.type || normalizeType(currentCard.type),
+                  auraColor: getAuraColor(enrichedData.type || normalizeType(currentCard.type)),
+                  info: enrichedData.description || currentCard.info,
+                  claimToFame: enrichedData.claimToFame,
+                  imageUrl: enrichedData.imageUrl || currentCard.imageUrl
+                }}
+                auraScore={enrichedData.auraMeter}
+                auraReason={enrichedData.auraReason}
+                cardCounter={`${currentIndex + 1}/${cards.length}`}
+                onSwipe={handleSwipe}
+                onReset={handleReset}
+                isExiting={exiting}
+              />
             )}
           </div>
         </motion.div>
-      </div>
-
-      {/* Action buttons - fixed position below the card */}
-      <div className="flex justify-center items-center gap-5">
-        <button
-          onClick={() => handleSwipe('left')}
-          className="p-4 bg-card/90 rounded-full text-destructive hover:bg-destructive hover:text-card
-                 transition-colors duration-300 shadow-[var(--shadow-primary)]"
-          aria-label="Dislike"
-          disabled={exiting || !enrichedData}
-        >
-          <X size={28} />
-        </button>
-        <button
-          onClick={handleReset}
-          className="p-3 bg-card/90 rounded-full text-muted-foreground hover:bg-secondary hover:text-secondary-foreground
-                 transition-colors duration-300 shadow-[var(--shadow-primary)]"
-          aria-label="Shuffle cards"
-          disabled={exiting || !enrichedData}
-        >
-          <RefreshCw size={22} />
-        </button>
-        <button
-          onClick={() => handleSwipe('right')}
-          className="p-4 bg-card/90 rounded-full text-primary hover:bg-primary hover:text-primary-foreground
-                 transition-colors duration-300 shadow-[var(--shadow-primary)]"
-          aria-label="Like"
-          disabled={exiting || !enrichedData}
-        >
-          <Heart size={28} />
-        </button>
       </div>
     </div>
   );
