@@ -25,16 +25,16 @@ export default function DiscoverPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center my-20"
+        className="text-center pt-15 pb-6 flex flex-col items-center justify-center gap-1"
       >
-        <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
+        <h1 className={`${satoshi.className} text-2xl md:text-4xl font-bold text-gray-800`}>
           Discover people, places,
         </h1>
-        <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
-          brands, food - literally 
+        <h1 className={`${satoshi.className} text-2xl md:text-4xl font-bold text-gray-800`}>
+          brands, food
         </h1>
-        <h1 className={`${satoshi.className} text-3xl md:text-4xl font-bold text-gray-800`}>
-          anything that excites you
+        <h1 className={`${satoshi.className} text-md md:text-4xl text-[#9C9A96]`}>
+          literally anything that excites you
         </h1>
       </motion.div>
 
@@ -42,7 +42,7 @@ export default function DiscoverPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className='pb-6'
+        className='py-6'
       >
         <SearchBox />
       </motion.div>

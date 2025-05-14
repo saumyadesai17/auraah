@@ -47,9 +47,9 @@ export default function TagButton({ tag }: TagButtonProps) {
     <Link
       href={`/discover/tag?id=${encodeURIComponent(tag.id)}`}
       className="flex items-center px-4 py-2 rounded-full 
-                 bg-gray-100 hover:bg-gray-200 
-                 text-gray-700 hover:text-gray-900
-                 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
+                 bg-[#F7F6F6] hover:bg-gray-200 
+                 text-[#282724] hover:text-gray-900
+                 transition-all duration-200 text-sm font-medium"
     >
       {getIcon(tag.type)}
       {tag.name}

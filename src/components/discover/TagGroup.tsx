@@ -17,8 +17,8 @@ export default function TagGroup({ title, tags, icon }: TagGroupProps) {
   return (
     <section className="my-8">
       <div className="flex items-center mb-4">
-        {icon && <span className="mr-2 text-gray-500">{icon}</span>}
-        <h2 className="text-lg font-medium text-gray-600">
+        {icon && <span className="mr-2 text-[#9C9A96]">{icon}</span>}
+        <h2 className="text-md font-medium text-[#9C9A96]">
           {title}
         </h2>
       </div>

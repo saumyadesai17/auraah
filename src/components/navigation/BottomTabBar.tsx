@@ -15,7 +15,7 @@ export default function BottomTabBar() {
 
   return (
     // The parent div in (tabs)/layout.tsx now handles bg-white and border-t
-    <nav className="w-full md:hidden"> {/* Removed fixed positioning, bg, border, shadow as it's handled by parent */}
+    <nav className="w-full"> {/* Removed fixed positioning, bg, border, shadow as it's handled by parent */}
       <div className="flex justify-around items-center h-16 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href ||
@@ -29,12 +29,12 @@ export default function BottomTabBar() {
               href={item.href}
               className={`flex flex-col items-center justify-center p-1 w-1/3 h-full
                 transition-colors duration-200
-                ${isActive ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                ${isActive ? 'text-[#816FE9]' : 'text-[#9C9A96] hover:text-[#816FE9]'}`}
             >
               {/* Removed background div around icon for cleaner look */}
               <item.icon size={24} strokeWidth={isActive ? 2 : 1.5} />
               <span className={`mt-1 text-xs 
-                ${isActive ? 'font-medium text-gray-900' : 'font-normal text-gray-600'}`}>
+                ${isActive ? 'font-medium text-[#816FE9]' : 'font-normal text-[#9C9A96]'}`}>
                 {item.label}
               </span>
             </Link>

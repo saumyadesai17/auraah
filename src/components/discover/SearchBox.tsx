@@ -14,9 +14,13 @@ interface SearchBoxProps {
 function SearchBoxContent({ initialQuery = '' }: SearchBoxProps) {
   const [query, setQuery] = useState(initialQuery);
   const [hasActiveSearch, setHasActiveSearch] = useState(false);
+  const [isEngaged, setIsEngaged] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  // Check if we're on the main discover page
+  const isOnDiscoverMainPage = pathname === '/discover';
 
   useEffect(() => {
     // Check if we're on a search or tag page and extract the query
@@ -51,66 +55,96 @@ function SearchBoxContent({ initialQuery = '' }: SearchBoxProps) {
     if (query.trim()) {
       router.push(`/discover/search?q=${encodeURIComponent(query.trim())}`);
       setHasActiveSearch(true);
+      setIsEngaged(false); // Search is executed, no longer engaged
     }
   };
 
   const handleClear = () => {
     setQuery('');
-    // Do not navigate or change the URL when clearing the input
-    // Just update the local state to show the appropriate styling
     setHasActiveSearch(false);
-    // We're not calling router.push() anymore, so the page content will remain unchanged
+    // After clearing, keep focus on the input
+    document.getElementById('search-input')?.focus();
+  };
+
+  // Determine the border style based on state
+  const getBorderStyle = () => {
+    // Show gradient on discover main page even when not engaged
+    if (isEngaged || isOnDiscoverMainPage) {
+      // Engaged state or on discover main page - colored gradient
+      return 'border-transparent bg-gradient-to-r from-emerald-200 via-sky-200 via-violet-300 to-pink-300';
+    } else if (query && hasActiveSearch) {
+      // Has content but not engaged (4th image) - no gradient, just white
+      return 'border-transparent bg-[#FCFCFC]';
+    } else {
+      // Default/idle state (1st image) - light gray
+      return 'bg-transparent border-[#F3F2F2]';
+    }
+  };
+
+  // Determine if we should show the search button based on state
+  const shouldShowSearchButton = () => {
+    // Always show search button on discover main page
+    if (isOnDiscoverMainPage) return true;
+    // Show when engaged or when no query
+    return isEngaged || !query;
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto mb-6 sticky top-16 z-30 px-4 py-3">
+    <div className="w-full max-w-xl mx-auto sticky top-16 z-30 py-3">
       <form onSubmit={handleSearch}>
-        {/* Gradient border container - conditionally apply styles */}
+        {/* Gradient border container - state-dependent styles */}
         <div
-          className={`p-[1.5px] rounded-full 
-                     ${hasActiveSearch
-              ? 'bg-white'
-              : 'bg-gradient-to-r from-emerald-200 via-sky-200 via-violet-300 to-pink-300'} 
-                     focus-within:ring-2 focus-within:ring-sky-300 focus-within:ring-offset-1`}
+          className={`p-[1.5px] rounded-full ${getBorderStyle()}
+           will-change-transform transition-colors duration-200`}
         >
           {/* Inner container for input and button, with white background */}
-          <div className="relative flex items-center w-full bg-white rounded-full">
+          <div className="relative flex items-center w-full bg-white rounded-full overflow-hidden shadow-sm">
             <input
+              id="search-input"
               type="text"
-              placeholder={hasActiveSearch ? '' : "Search for auras..."}
+              placeholder={isEngaged || !query || isOnDiscoverMainPage ? "Search for something..." : ""}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className={`w-full px-5 py-3 ${hasActiveSearch ? 'pr-20' : 'pr-12'} rounded-full 
-                       bg-transparent 
-                       text-gray-700
-                       placeholder:text-gray-400
-                       focus:outline-none ${satoshi.className}`}
+              onFocus={() => setIsEngaged(true)}
+              onBlur={() => setIsEngaged(false)}
+              className={`w-full px-5 py-3 ${query ? 'pr-16' : 'pr-12'} rounded-full 
+             bg-transparent 
+             text-gray-700
+             placeholder:text-gray-400
+             outline-none ring-0 focus:ring-0 focus:outline-none
+             ${satoshi.className}`}
             />
 
-            {/* Show clear button if there's an active search */}
-            {hasActiveSearch && (
+            {/* Show clear button if there's content in the search field */}
+            {query && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="absolute right-12 top-1/2 transform -translate-y-1/2
-                         p-2 rounded-full text-gray-500
-                         hover:text-gray-700 transition-colors"
+                className={`absolute ${shouldShowSearchButton() ? 'right-12' : 'right-3'} top-1/2 transform -translate-y-1/2
+                 p-2 rounded-full text-gray-500
+                 hover:text-gray-700 transition-colors duration-200
+                 ${!isEngaged && !isOnDiscoverMainPage && 'text-lg'}`}
                 aria-label="Clear search"
               >
-                <X size={20} />
+                <X size={shouldShowSearchButton() ? 20 : 22} />
               </button>
             )}
 
-            <button
-              type="submit"
-              className={`absolute right-3 top-1/2 transform -translate-y-1/2
-                       p-2 rounded-full 
-                       ${hasActiveSearch ? 'bg-gray-900 text-white' : 'text-gray-500 hover:text-gray-700'} 
-                       transition-colors`}
-              aria-label="Search"
-            >
-              <Search size={20} />
-            </button>
+            {/* Search button with state-dependent styling */}
+            {shouldShowSearchButton() && (
+              <button
+                type="submit"
+                className={`absolute right-3 top-1/2 transform -translate-y-1/2
+               p-2 rounded-full 
+               ${query
+                    ? 'bg-gray-900 text-white'
+                    : 'text-gray-500 hover:text-gray-700'} 
+               transition-all duration-200`}
+                aria-label="Search"
+              >
+                <Search size={20} />
+              </button>
+            )}
           </div>
         </div>
       </form>
