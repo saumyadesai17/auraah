@@ -1,3 +1,4 @@
+//src/app/(tabs)/discover/search/page.tsx
 'use client';
 
 import { useSearchParams } from 'next/navigation';
@@ -49,7 +50,6 @@ function SearchPageContent() {
 
                 const data = await response.json();
                 setAiData(data);
-                console.log('AI Data:', data);
                 if (data.recommendedHashtags) {
                     let type: 'person' | 'place' | 'brand' = 'brand';
                     const desc = data.description?.toLowerCase() || '';

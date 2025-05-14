@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-export default function InterestsPage() {
+export default function RecommendedPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

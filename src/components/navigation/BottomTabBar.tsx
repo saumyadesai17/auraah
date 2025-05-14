@@ -7,7 +7,7 @@ import { Compass, Search, Sparkles } from 'lucide-react';
 const navItems = [
   { href: '/explore', label: 'Explore', icon: Compass },
   { href: '/discover', label: 'Discover', icon: Search },
-  { href: '/interests', label: 'Interests', icon: Sparkles },
+  { href: '/recommended', label: 'Recommended', icon: Sparkles },
 ];
 
 export default function BottomTabBar() {
@@ -21,7 +21,7 @@ export default function BottomTabBar() {
           const isActive = pathname === item.href ||
                            (item.href === '/discover' && pathname.startsWith('/discover')) ||
                            (item.href === '/explore' && pathname.startsWith('/explore')) ||
-                           (item.href === '/interests' && pathname.startsWith('/interests'));
+                           (item.href === '/recommended' && pathname.startsWith('/recommended'));
           
           return (
             <Link

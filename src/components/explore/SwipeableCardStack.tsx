@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, PanInfo, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { mockAuras } from '@/lib/data';
-import AuraDisplay from '@/components/discover/AuraDisplay';
+import AuraCard from '@/components/explore/AuraCard';
 import { Heart, X, RefreshCw } from 'lucide-react';
 import { getAuraColor } from '@/lib/aura';
 // Import the mock aura responses
@@ -311,7 +311,7 @@ export default function SwipeableCardStack() {
           </motion.div>
 
           {/* Card content - Use overflow auto for scrolling */}
-          <div className="h-full overflow-y-auto px-1 pb-4"
+          <div className="h-full overflow-y-auto px-1 pb-4 rounded-2xl shadow-md"
             style={{ touchAction: "pan-y" }}>
             {!enrichedData ? (
               <div className="h-full flex flex-col items-center justify-center p-6 bg-white rounded-lg">
@@ -319,8 +319,8 @@ export default function SwipeableCardStack() {
                 <p className="mt-4 text-gray-600">Loading aura information...</p>
               </div>
             ) : (
-              <div className="h-full bg-white rounded-lg">
-                <AuraDisplay
+              <div className="h-full bg-white rounded-2xl overflow-hidden">
+                <AuraCard
                   aura={{
                     ...currentCard,
                     type: enrichedData.type || normalizeType(currentCard.type),

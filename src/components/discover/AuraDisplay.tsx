@@ -1,3 +1,5 @@
+//src/components/discover/AuraDisplay.tsx
+
 import { Aura } from '@/lib/data';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -95,8 +97,6 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
     // Save updated arrays
     localStorage.setItem('likedAuras', JSON.stringify(likedAuras));
     localStorage.setItem('dislikedAuras', JSON.stringify(dislikedAuras));
-
-    console.log("Liked Auras:", likedAuras);
   };
 
   const handleDislike = () => {
@@ -131,8 +131,6 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
     // Save updated arrays
     localStorage.setItem('likedAuras', JSON.stringify(likedAuras));
     localStorage.setItem('dislikedAuras', JSON.stringify(dislikedAuras));
-
-    console.log("Disliked Auras:", dislikedAuras);
   };
 
   if (!aura) {
@@ -144,14 +142,10 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`${satoshi.className} flex flex-col p-6 rounded-lg bg-white relative`}
-      style={{
-        boxShadow:
-          '-2px -2px 16px 0px #95EE933D, 0px 2px 12px 0px #E99DF766, 0px 8px 16px 0px #89D6E83D'
-      }}
+      className={`${satoshi.className} flex flex-col`}
     >
       {/* Header section with type indicator and action buttons */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start">
         {/* Type indicator */}
         <div className="self-start">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-gray-700 text-sm font-bold border border-[#A193F2]">
@@ -161,62 +155,62 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         </div>
 
         {/* Like/dislike buttons */}
-        <div className="flex flex-col gap-4">
-  <button
-    onClick={handleDislike}
-    className={`rounded-full w-10 h-10 flex items-center justify-center
-    transition-all duration-200
-    ${isDisliked
-      ? 'bg-red-100 ring-2 ring-red-400 transform scale-110'
-      : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
-    style={{
-      boxShadow: isDisliked 
-        ? '0 0 0 2px rgba(248, 113, 113, 0.4), 0 0 8px rgba(248, 113, 113, 0.4)' 
-        : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
-    }}
-    aria-label="Dislike"
-  >
-    <X
-      size={20}
-      className={isDisliked
-        ? "text-red-500 font-bold"
-        : "text-red-500"}
-      strokeWidth={isDisliked ? 2.5 : 2}
-    />
-  </button>
-  <button
-    onClick={handleLike}
-    className={`rounded-full w-10 h-10 flex items-center justify-center
-    transition-all duration-200
-    ${isLiked
-      ? 'bg-green-100 ring-2 ring-green-400 transform scale-110'
-      : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
-    style={{
-      boxShadow: isLiked 
-        ? '0 0 0 2px rgba(74, 222, 128, 0.4), 0 0 8px rgba(74, 222, 128, 0.4)' 
-        : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
-    }}
-    aria-label="Like"
-  >
-    <Heart
-      size={20}
-      className={isLiked
-        ? "text-green-500 fill-green-500"
-        : "text-green-500"}
-      strokeWidth={isLiked ? 2.5 : 2}
-    />
-  </button>
-</div>
+        <div className="flex flex-col gap-4 px-3">
+          <button
+            onClick={handleDislike}
+            className={`rounded-full w-10 h-10 flex items-center justify-center
+            transition-all duration-200
+            ${isDisliked
+              ? 'bg-red-100 ring-2 ring-red-400 transform scale-110'
+              : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
+            style={{
+              boxShadow: isDisliked 
+                ? '0 0 0 2px rgba(248, 113, 113, 0.4), 0 0 8px rgba(248, 113, 113, 0.4)' 
+                : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
+            }}
+            aria-label="Dislike"
+          >
+            <X
+              size={20}
+              className={isDisliked
+                ? "text-red-500 font-bold"
+                : "text-red-500"}
+              strokeWidth={isDisliked ? 2.5 : 2}
+            />
+          </button>
+          <button
+            onClick={handleLike}
+            className={`rounded-full w-10 h-10 flex items-center justify-center
+            transition-all duration-200
+            ${isLiked
+              ? 'bg-green-100 ring-2 ring-green-400 transform scale-110'
+              : 'bg-[#FAFAFA] hover:bg-gray-100'}`}
+            style={{
+              boxShadow: isLiked 
+                ? '0 0 0 2px rgba(74, 222, 128, 0.4), 0 0 8px rgba(74, 222, 128, 0.4)' 
+                : '0px 1px 3px 0px #0000001A, 0px 1px 2px -1px #0000001A'
+            }}
+            aria-label="Like"
+          >
+            <Heart
+              size={20}
+              className={isLiked
+                ? "text-green-500 fill-green-500"
+                : "text-green-500"}
+              strokeWidth={isLiked ? 2.5 : 2}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Rest of the component remains the same */}
+      {/* Image section */}
       <motion.div
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.6, type: "spring" }}
-        className="flex justify-center"
+        className="flex justify-center mb-8"
       >
-        <div className="w-60 h-60 rounded-full border-2 border-blue-100 bg-white flex items-center justify-center relative overflow-hidden shadow-inner">
+        <div className="w-60 h-60 rounded-full border-2 border-blue-100 bg-white flex items-center justify-center relative overflow-hidden">
           {aura?.imageUrl && !imageError ? (
             <div className="w-52 h-52 relative rounded-full overflow-hidden">
               <Image
@@ -237,18 +231,18 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         </div>
       </motion.div>
 
-      <div className="text-center mt-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-3">{aura?.name}</h2>
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-[#363430] mb-3">{aura?.name}</h2>
         <div className="w-60 h-1 bg-purple-300 mx-auto rounded-full mb-6"></div>
 
-        <p className="text-gray-600 text-base mb-6 text-left">
+        <p className="text-[#363430] text-base mb-6 text-left">
           {aura?.info}
         </p>
 
         {aura?.claimToFame && (
           <div className="mb-6">
-            <h3 className="text-sm font-bold text-gray-500 text-left">Claim to fame</h3>
-            <p className="text-gray-700 mt-2 text-left">
+            <h3 className="text-sm font-bold text-[#9C9A96] text-left">Claim to fame</h3>
+            <p className="text-[#363430] mt-2 text-left">
               {aura.claimToFame}
             </p>
           </div>
@@ -256,7 +250,7 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
 
         {auraScore !== null && (
           <div className="mb-6">
-            <h3 className="text-sm font-bold text-gray-500 mb-2 text-left">Aura Score:</h3>
+            <h3 className="text-sm font-bold text-[#9C9A96] mb-2 text-left">Aura Score:</h3>
 
             <div className="bg-[#F2FEF3] rounded-lg p-4 relative overflow-hidden">
               <div className="absolute left-0 top-0 h-full w-[2px]"
