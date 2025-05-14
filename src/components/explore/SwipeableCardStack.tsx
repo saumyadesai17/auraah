@@ -83,9 +83,10 @@ export default function SwipeableCardStack() {
   const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 0, 200], [-5, 0, 5]);
 
-  // Show indicators with less movement required
-  const likeOpacity = useTransform(x, [20, 80], [0, 1]);  // Start showing at just 20px
-  const dislikeOpacity = useTransform(x, [-80, -20], [1, 0]);  // Start showing at just -20px
+  const likeScale = useTransform(x, [40, 100], [0.9, 1.2]);
+  const dislikeScale = useTransform(x, [-100, -40], [1.2, 0.9]);
+  const likeOpacity = useTransform(x, [20, 80], [0, 1]);
+  const dislikeOpacity = useTransform(x, [-80, -20], [1, 0]);
 
   // Animation controls
   const controls = useAnimation();
@@ -359,7 +360,7 @@ export default function SwipeableCardStack() {
             className="absolute top-10 left-6 z-30"
             style={{
               opacity: likeOpacity,
-              scale: useTransform(x, [40, 100], [0.9, 1.2])
+              scale: likeScale,
             }}
           >
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-50 border-2 border-green-400 shadow-lg">
@@ -375,7 +376,7 @@ export default function SwipeableCardStack() {
             className="absolute top-10 right-6 z-30"
             style={{
               opacity: dislikeOpacity,
-              scale: useTransform(x, [-100, -40], [1.2, 0.9])
+              scale: dislikeScale
             }}
           >
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-50 border-2 border-red-400 shadow-lg">
