@@ -250,9 +250,12 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         <h2 className="text-3xl font-bold text-[#363430] mb-3">{aura?.name}</h2>
         <div className="w-60 h-1 bg-purple-300 mx-auto rounded-full mb-6"></div>
 
-        <p className="text-[#363430] text-base mb-6 text-left">
-          {aura?.info}
-        </p>
+        <div className="mb-6">
+          <h3 className="text-sm font-bold text-[#9C9A96] text-left">About</h3>
+          <p className="text-[#363430] text-base text-left mt-2">
+            {aura?.info}
+          </p>
+        </div>
 
         {aura?.claimToFame && (
           <div className="mb-6">

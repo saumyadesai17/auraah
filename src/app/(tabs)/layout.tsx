@@ -17,7 +17,7 @@ export default function TabsLayout({
       </main>
       
       {/* Bottom tab bar - fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#F3F2F2]">
         <BottomTabBar />
       </div>
     </div>

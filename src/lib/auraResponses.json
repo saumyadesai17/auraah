@@ -100,6 +100,36 @@
     "imageUrl": "https://static.zerochan.net/Sherlock.Holmes.(Character).full.1138383.jpg"
   },
   {
+    "name": "Detective Conan",
+    "type": "fictional character",
+    "description": "Detective Conan is a fictional character and the main protagonist of the manga and anime series 'Detective Conan', also known as 'Case Closed'. He is a high school detective who solves mysteries and crimes using his exceptional intelligence and detective skills.",
+    "claimToFame": "Detective Conan is a highly popular and renowned fictional character in the world of detective fiction, with a global following and numerous adaptations across various media platforms. His remarkable detective skills and youthful energy have captivated audiences worldwide, making him an iconic figure in the genre.",
+    "recommendedHashtags": "#LupinIII, #GhostInTheShell, #Manga, #Anime, #DetectiveFiction, #Mystery, #Thriller, #Crime, #JapaneseCulture, #ComicBookHeroes",
+    "auraReason": "Detective Conan's widespread popularity, numerous adaptations, and cross-cultural appeal contribute to its high auraMeter score. Its impact on the detective fiction genre and its influence on popular culture are significant, making it a notable and iconic character.",
+    "auraMeter": 85,
+    "imageUrl": "https://picfiles.alphacoders.com/255/thumb-1920-255676.jpg"
+  },
+  {
+    "name": "Moriarty",
+    "type": "fictional character",
+    "description": "Moriarty is a fictional character, the archenemy of Sherlock Holmes, created by Sir Arthur Conan Doyle.",
+    "claimToFame": "Moriarty is one of the most iconic villains in literature, known for his intellectual prowess and cunning schemes. He has been portrayed by many actors in various adaptations of the Sherlock Holmes stories and has become a cultural symbol of evil genius.",
+    "recommendedHashtags": "#ProfessorPembroke, #DrCaligari, #Othello, #RaoulSilva, #Smaug, #Loki, #Joker, #Magneto, #DarthVader, #BaronVonHerrmann",
+    "auraMeter": 85,
+    "auraReason": "Moriarty's auraMeter score is high due to his enduring popularity and cultural relevance, as well as his status as a iconic villain in literature and popular media.",
+    "imageUrl": "https://somoskudasai.com/wp-content/uploads/2021/12/portada_moriarty-20.jpg"
+  },
+  {
+    "name": "john watson",
+    "type": "fictional character",
+    "description": "John Watson is a fictional character in the Sherlock Holmes stories created by Sir Arthur Conan Doyle. He is a military doctor and the trusty sidekick of the renowned detective Sherlock Holmes.",
+    "claimToFame": "John Watson is notable for being the loyal and intelligent companion of Sherlock Holmes, helping him solve complex cases and providing a human perspective to balance out the detective's analytical mind.",
+    "recommendedHashtags": "#DrJohnWatson, #SherlockHolmes, #DetectiveFiction, #MysteryNovels, #FictionalCharacters, #ClassicLiterature, #LiteraryCharacters, #BritishLiterature, #FamousSidekicks, #DetectivePartners",
+    "auraMeter": 82,
+    "auraReason": "John Watson's iconic role in the Sherlock Holmes stories has made him a cultural phenomenon, with a wide recognition and influence that transcends the literary world.",
+    "imageUrl": "https://cdn.anime-planet.com/characters/primary/john-watson-sherlock-1.jpg?t=1625850124"
+  },
+  {
     "name": "Paris",
     "type": "place",
     "description": "Paris is the capital and most populous city of France, known for its rich history, cultural landmarks, and romantic atmosphere.",
@@ -198,6 +228,36 @@
     "auraMeter": 85,
     "auraReason": "Gotham City's high auraMeter score reflects its widespread recognition and influence in popular culture, particularly in the world of comics and superheroes, making it a cultural icon.",
     "imageUrl": "https://wallpapers.com/images/hd/gotham-city-1920-x-1080-background-qgbkv2lla3q1qxww.jpg"
+  },
+  {
+    "name": "Kyoto",
+    "type": "place",
+    "description": "Kyoto is a city in Japan known for its cultural and historical significance.",
+    "claimToFame": "Kyoto is a UNESCO World Heritage site and a popular tourist destination, attracting millions of visitors each year. Its well-preserved temples, gardens, and traditional architecture make it a unique cultural experience.",
+    "recommendedHashtags": "#Tokyo, #Osaka, #Nara, #Shanghai, #Beijing, #Bangkok, #Seoul, #HongKong, #Singapore, #Marrakech",
+    "auraMeter": 85,
+    "auraReason": "Kyoto's cultural and historical significance, as well as its popularity among tourists, contribute to its high auraMeter score.",
+    "imageUrl": "https://www.thebrokebackpacker.com/wp-content/uploads/2019/06/Higashiyama-District-Kyoto.jpg"
+  },
+  {
+    "name": "Osaka",
+    "type": "place",
+    "description": "Osaka is a city in Japan known for its rich history, vibrant culture, and delicious food.",
+    "claimToFame": "Osaka is one of Japan's most famous cities, attracting millions of tourists each year with its unique blend of traditional and modern attractions, including the Osaka Castle, Universal Studios Japan, and the Dotonbori entertainment district.",
+    "recommendedHashtags": "#Kyoto, #Tokyo, #Nara, #Kyushu, #Hiroshima, #Fukuoka, #Sapporo, #Yokohama, #Nagoya, #Hakone",
+    "auraMeter": 85,
+    "auraReason": "Osaka's strong cultural and historical significance, as well as its popularity as a tourist destination, contribute to its high auraMeter score.",
+    "imageUrl": "https://www.orangesmile.com/common/img_cities_original/osaka--240905-5.jpg"
+  },
+  {
+    "name": "Hiroshima",
+    "type": "place",
+    "description": "Hiroshima is the capital city of Hiroshima Prefecture, Japan, and is located on the island of Honshu.",
+    "claimToFame": "Hiroshima is most notable for being the first city in history to be targeted by an atomic bomb, which was dropped by the United States on August 6, 1945, during World War II. The city has since become a symbol of peace and a reminder of the devastating effects of nuclear war.",
+    "recommendedHashtags": "#Osaka, #Tokyo, #Nagasaki, #NuclearDisarmament, #PeacefulResolution, #WorldWarII, #HistoricCities, #AsiaPacifc, #JapaneseCulture, #PeaceMovement",
+    "auraMeter": 75,
+    "auraReason": "The auraMeter score is 75 due to Hiroshima's significant historical importance and its current status as a symbol of peace and nuclear disarmament.",
+    "imageUrl": "https://www.orangesmile.com/common/img_cities_original/hiroshima--229436-6.jpg"
   },
   {
     "name": "Apple",

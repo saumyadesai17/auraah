@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 // import { ThemeProvider } from "@/components/ui/ThemeProvider"; // Removed
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Auraah | Your Personal AI Productivity Companion",
@@ -17,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white text-gray-800 antialiased`}> {/* Adjusted for light theme */}
+      <body className={`bg-white text-gray-800 antialiased`}> {/* Adjusted for light theme */}
         {/* <ThemeProvider> */} {/* Removed ThemeProvider wrapper */}
           {children}
         {/* </ThemeProvider> */}
