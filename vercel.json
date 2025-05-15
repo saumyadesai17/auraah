@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "src/app/api/image-proxy/route.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "images": {
+    "sizes": [256, 384, 640, 750, 828, 1080, 1200],
+    "domains": ["*"],
+    "minimumCacheTTL": 604800
+  }
+}

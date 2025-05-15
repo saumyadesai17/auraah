@@ -213,14 +213,27 @@ export default function AuraDisplay({ aura, auraScore: providedScore, auraReason
         <div className="w-60 h-60 rounded-full overflow-hidden relative bg-gray-100">
           {aura?.imageUrl && !imageError ? (
             <div className="absolute inset-0 flex items-center justify-center">
+              {/* Static background placeholder */}
+              <div className="absolute inset-0 bg-gray-100"></div>
+
+              {/* Initial image load - immediately request high quality */}
               <Image
-                src={aura.imageUrl}
+                src={`/api/image-proxy?url=${encodeURIComponent(aura.imageUrl)}&width=600&quality=95`}
                 alt={aura.name}
-                width={240}
-                height={240}
-                className="min-w-full min-h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 400px, 560px"
+                className="object-cover rounded z-10 transition-opacity duration-700"
+                style={{ opacity: 0 }}
+                onLoad={(event) => {
+                  const img = event.currentTarget;
+                  // When the image loads completely, fade it in smoothly
+                  setTimeout(() => {
+                    img.style.opacity = '1';
+                  }, 50);
+                }}
                 onError={() => setImageError(true)}
-                unoptimized
+                priority
+                loading="eager"
               />
             </div>
           ) : (
