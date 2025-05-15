@@ -101,13 +101,15 @@ function TagContent() {
 
   return (
     <div className={`${satoshi.className} bg-gray-50 p-4 md:p-6`}>
-      {/* SearchBox in its own container */}
-      <div className="w-full max-w-3xl mx-auto mb-8">
-        <SearchBox />
+      {/* Fixed SearchBox at the top */}
+      <div className="fixed top-14 left-0 w-full z-30 bg-[#F9FAFB]">
+        <div className="w-full max-w-3xl mx-auto">
+          <SearchBox />
+        </div>
       </div>
-      
-      {/* Content with proper spacing from SearchBox */}
-      <div className="animate-[var(--animate-fade-in)] max-w-3xl mx-auto mt-8">
+
+      {/* Add padding top to offset the fixed SearchBox */}
+      <div className="animate-[var(--animate-fade-in)] max-w-3xl mx-auto pt-28">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh]">
             <motion.div

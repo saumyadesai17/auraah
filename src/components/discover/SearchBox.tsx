@@ -90,7 +90,7 @@ function SearchBoxContent({ initialQuery = '' }: SearchBoxProps) {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto sticky top-16 z-30 py-3">
+    <div className="w-full max-w-3xl mx-auto sticky top-15 z-30 px-4 py-6 md:px-0">
       <form onSubmit={handleSearch}>
         {/* Gradient border container - state-dependent styles */}
         <div
